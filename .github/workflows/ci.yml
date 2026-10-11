@@ -43,10 +43,33 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  frontend:
+    name: frontend types, type-check, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.0
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: uv python install
+      - run: uv sync --frozen
+      - name: Regenerate the OpenAPI document and the API types, fail on drift
+        run: |
+          uv run python scripts/export_openapi.py frontend/openapi.json
+          cd frontend && npm ci --no-audit --no-fund && npm run -s types
+          git diff --exit-code -- frontend/openapi.json frontend/src/api.d.ts
+      - run: cd frontend && npm run -s typecheck
+      - run: cd frontend && npm run -s build
+
   image:
     name: build image, smoke it, push
     if: github.event_name != 'pull_request' && inputs.image_tag == ''
-    needs: quality
+    needs: [quality, frontend]
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.meta.outputs.tag }}
