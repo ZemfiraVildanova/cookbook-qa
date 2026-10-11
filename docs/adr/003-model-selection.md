@@ -1,6 +1,6 @@
 # ADR-003: Generation model selection
 
-- Status: Proposed
+- Status: Accepted (2026-10-11, after the step-13 measurements)
 - Date: 2026-10-11
 - Related: SPEC sections 5.6, 8, 9; rules R-41, R-50, R-54, R-61; README Cost & Latency
 

@@ -1,6 +1,6 @@
 # ADR-001: Whole-recipe retrieval units with hybrid BM25 + embedding retrieval and metadata filters
 
-- Status: Proposed
+- Status: Accepted (2026-10-11, after the step-13 measurements)
 - Date: 2026-10-11
 - Related: SPEC sections 2, 4, 5.2; rules R-11..R-19, R-62, R-63; ADR-002
 
@@ -28,7 +28,7 @@ quality decides both grounding and the share of questions that can be answered a
 
 | Option | Pros | Cons | Verdict |
 |---|---|---|---|
-| A. Whole recipe (one unit per page) | Matches the citation unit; constraints and metadata belong to the page; no reassembly; ~50 units | Long pages dilute lexical and vector scores; method text can exceed prompt budget (mitigated by `PROMPT_RECIPE_MAX_CHARS`) | **Provisional choice** |
+| A. Whole recipe (one unit per page) | Matches the citation unit; constraints and metadata belong to the page; no reassembly; ~50 units | Long pages dilute lexical and vector scores; method text can exceed prompt budget (mitigated by `PROMPT_RECIPE_MAX_CHARS`) | **Chosen** |
 | B. Sections (ingredients and method as separate units) | Sharper matches for ingredient questions | Citations and filters need re-aggregation to the page; a step without its ingredients misleads the model; doubles the index for no gain at 50 pages | Rejected |
 | C. Fixed-size chunks with overlap | Standard for long documents | Recipes are short; chunk boundaries cut ingredient lists; same re-aggregation problem | Rejected |
 
@@ -38,7 +38,7 @@ quality decides both grounding and the share of questions that can be answered a
 |---|---|---|---|---|---|---|
 | D. BM25 only (`rank-bm25`, title boosted) | Strong (exact tokens) | Weak | ~0 ms | $0 | n/a | Fallback mode (R-62) |
 | E. Embeddings only (`text-embedding-3-small`, cosine) | Medium (names are often rare tokens) | Strong | one API call; pre-model responses that include it took 139–323 ms end to end in production (harness G-09, G-12, G-13 and the smoke runs of 2026-10-11) | about 16 tokens per query × $0.02 / 1M ≈ $0.0000003 | none | Rejected alone |
-| F. Hybrid: D + E fused with reciprocal rank fusion (`RRF_K = 60`), then hard metadata filters, `TOP_K = 4` | Strong | Strong | same as E | same as E | degrades to D | **Provisional choice** |
+| F. Hybrid: D + E fused with reciprocal rank fusion (`RRF_K = 60`), then hard metadata filters, `TOP_K = 4` | Strong | Strong | same as E | same as E | degrades to D | **Chosen** |
 
 Measured (`evals/retrieval_eval.py`, corpus `40eeca491bc2`, `TOP_K = 4`, no constraints).
 Step 7, 30 queries (half dish names, half paraphrases), `evals/reports/retrieval-20261011T083912Z.json`:
@@ -70,11 +70,11 @@ and because dish names in questions are the common case.
 
 | Option | Pros | Cons | Verdict |
 |---|---|---|---|
-| G. Hard metadata filters after fusion, three-valued (unknown fails) | Verifiable without the model; $0; testable | Lower recall when metadata is unknown; depends on ingest quality | **Provisional choice** |
+| G. Hard metadata filters after fusion, three-valued (unknown fails) | Verifiable without the model; $0; testable | Lower recall when metadata is unknown; depends on ingest quality | **Chosen** |
 | H. Ask the model to obey constraints from the recipe text | No metadata needed | Not verifiable; model may miss a time or a hidden meat ingredient; violates "obey constraints" as a hard requirement | Rejected as the only mechanism; kept as best effort for unparsed constraints (R-18) |
 | I. Filter before retrieval (pre-filter) | Smaller candidate set | Identical result at 50 recipes; more code paths | Rejected |
 
-## Decision (provisional)
+## Decision
 
 Index each recipe page as one unit. Score all recipes with BM25 (title repeated
 `BM25_TITLE_BOOST` times) and with cosine similarity over `text-embedding-3-small`
