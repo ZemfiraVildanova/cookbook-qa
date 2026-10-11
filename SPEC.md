@@ -489,7 +489,7 @@ Each rule: statement, then **V:** verification method (test file, eval case id, 
   with recommendations from the retrieved set, one sentence per recipe; when the question
   mentions an audience or occasion the recipes do not describe, the answer says so once.
   `out_of_corpus` is reserved for a specific dish, ingredient or property that none of the
-  retrieved recipes has. The rule lives in the prompt (rule 3 of `answer.v3`). **V:** eval
+  retrieved recipes has. The rule lives in the prompt (rule 3 of `answer.v4`). **V:** eval
   G-03 (`refused = false`, empty `applied_constraints`, at least one citation); E-28, E-29.
 
 ### 5.4 Safety policy
@@ -723,7 +723,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `LLM_TIMEOUT_S` | 15 | | Per attempt |
 | `LLM_MAX_RETRIES` | 1 | | One retry on timeout, 5xx, 429, connection error, invalid output |
 | `LLM_RETRY_BACKOFF_S` | 0.5 | | Pause before the retry (R-50, R-61) |
-| `PROMPT_VERSION` | `answer.v3` | | File `prompts/answer.v3.md`. v1 let a four-recipe recommendation (G-06) run past `LLM_MAX_OUTPUT_TOKENS` (12.6 s, then 503); v2 bounds the answer at 150 words and sets a shape per question type; v3 adds the open-question rule (R-24) after "What can I cook with my kids?" came back `out_of_corpus` in production |
+| `PROMPT_VERSION` | `answer.v4` | | File `prompts/answer.v4.md`. v4 removes "a missing detail" from the `out_of_corpus` definition in rule 2, which contradicted rule 1 and E-16 (found by the step-15 audit). v1 let a four-recipe recommendation (G-06) run past `LLM_MAX_OUTPUT_TOKENS` (12.6 s, then 503); v2 bounds the answer at 150 words and sets a shape per question type; v3 adds the open-question rule (R-24) after "What can I cook with my kids?" came back `out_of_corpus` in production |
 | `PROMPT_RECIPE_MAX_CHARS` | 3000 | | Method truncation per recipe in the prompt |
 | `LOG_TOP_RANKED` | 10 | | Fused candidates kept in the request log line (R-70) |
 | `REFUSAL_TEMPLATES` | section 6 texts | | R-20 |
@@ -907,3 +907,4 @@ ADRs and README use `--runs 3` against production.
 | v1.13 | 2026-10-11 | Section 11: eval gate details, artifact name, the three post-deploy smoke cases, daily schedule and `smoke_only` dispatch. |
 | v1.14 | 2026-10-11 | OpenAI adapter for the bake-off (R-54): `/v1/responses` over HTTP, `LLM_REASONING_EFFORT = none`. |
 | v1.15 | 2026-10-11 | 3.1: the built UI is served at `/` and `/assets/*` only; with the catch-all static mount `GET /ask` returned 404 instead of 405 (found at step 15). |
+| v1.16 | 2026-10-11 | `PROMPT_VERSION` answer.v4: rule 2 no longer lists a missing detail as `out_of_corpus` (R-01, E-16); 3.4 names `failed`/`cancelled` responses as `llm_unavailable`. |
