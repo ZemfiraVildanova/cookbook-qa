@@ -37,16 +37,34 @@ quality decides both grounding and the share of questions that can be answered a
 | Option | Dish-name questions | Paraphrase questions | Added latency | Cost per query | Offline fallback | Verdict |
 |---|---|---|---|---|---|---|
 | D. BM25 only (`rank-bm25`, title boosted) | Strong (exact tokens) | Weak | ~0 ms | $0 | n/a | Fallback mode (R-62) |
-| E. Embeddings only (`text-embedding-3-small`, cosine) | Medium (names are often rare tokens) | Strong | one API call, TBD ms (harness `latency_ms.embed`) | ~TBD tokens × $0.02 / 1M | none | Rejected alone |
+| E. Embeddings only (`text-embedding-3-small`, cosine) | Medium (names are often rare tokens) | Strong | one API call; pre-model responses that include it took 139–323 ms end to end in production (harness G-09, G-12, G-13 and the smoke runs of 2026-10-11) | about 16 tokens per query × $0.02 / 1M ≈ $0.0000003 | none | Rejected alone |
 | F. Hybrid: D + E fused with reciprocal rank fusion (`RRF_K = 60`), then hard metadata filters, `TOP_K = 4` | Strong | Strong | same as E | same as E | degrades to D | **Provisional choice** |
 
-Measured numbers to fill at step 7 and 13 (`evals/reports/retrieval-*.json`):
+Measured (`evals/retrieval_eval.py`, corpus `40eeca491bc2`, `TOP_K = 4`, no constraints).
+Step 7, 30 queries (half dish names, half paraphrases), `evals/reports/retrieval-20261011T083912Z.json`:
 
-| Mode | hit@1 | hit@4 | MRR | Notes |
-|---|---|---|---|---|
-| BM25 only | TBD | TBD | TBD | |
-| Embeddings only | TBD | TBD | TBD | |
-| Hybrid RRF | TBD | TBD | TBD | |
+| Mode | hit@1 | hit@4 | MRR |
+|---|---|---|---|
+| BM25 only | 1.00 | 1.00 | 1.000 |
+| Embeddings only | 1.00 | 1.00 | 1.000 |
+| Hybrid RRF | 1.00 | 1.00 | 1.000 |
+
+The 30-query set did not separate the modes, so at step 13 fifteen harder queries were
+added: descriptions that share no token with the title ("chickpea and tahini dip",
+"Dutch thin waffle cookies with caramel syrup filling"). 45 queries,
+`evals/reports/retrieval-20261011T115036Z.json`:
+
+| Mode | hit@1 | hit@4 | MRR |
+|---|---|---|---|
+| BM25 only | 0.96 | 0.96 | 0.962 |
+| Embeddings only | 1.00 | 1.00 | 1.000 |
+| Hybrid RRF | 0.96 | 0.98 | 0.967 |
+
+Reading: embeddings alone are perfect on this corpus; BM25 misses two paraphrases
+entirely; the hybrid keeps BM25's exactness on names and recovers all but one paraphrase
+("tart pink stalk dessert in pastry", a riddle rather than a question). The hybrid is kept
+over embeddings alone because it degrades to BM25 when the embedding API fails (R-62)
+and because dish names in questions are the common case.
 
 ### Constraint handling
 
@@ -82,5 +100,5 @@ shows a clear margin (R-21).
 
 ## Evidence
 
-- `evals/reports/retrieval-<date>.json` (step 7, step 13) — TBD.
-- Harness latency split `latency_ms.embed` and `latency_ms.retrieve` (step 11, 13) — TBD.
+- `evals/reports/retrieval-20261011T083912Z.json` (step 7, 30 queries) and `evals/reports/retrieval-20261011T115036Z.json` (step 13, 45 queries).
+- Pre-model latency (embedding + retrieval + safety branch) from the production harness reports `evals/reports/*-production.json`: 139–323 ms per request on 2026-10-11.
