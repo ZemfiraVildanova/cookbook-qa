@@ -319,7 +319,7 @@ LLM_MAX_OUTPUT_TOKENS: Final = 1000
 LLM_TIMEOUT_S: Final = 15.0
 LLM_MAX_RETRIES: Final = 1
 LLM_RETRY_BACKOFF_S: Final = 0.5  # pause before the single retry (R-50, R-61)
-PROMPT_VERSION: Final = "answer.v2"
+PROMPT_VERSION: Final = "answer.v3"
 PROMPT_RECIPE_MAX_CHARS: Final = 3000
 LOG_TOP_RANKED: Final = 10  # fused candidates kept in the request log line (R-70)
 

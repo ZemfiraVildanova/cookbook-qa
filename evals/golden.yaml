@@ -21,12 +21,14 @@ cases:
       cites_any: [gazpacho]
 
   - id: G-03
-    group: direct lookup
-    question: "Give me the recipe for pad thai."
-    why: imperative phrasing, no question mark
+    group: open question
+    question: "What can I cook with my kids?"
+    why: E-28 and R-24; "kids" is not an ingredient, so no filter applies, and the model must recommend rather than refuse
     expect:
       refused: false
-      cites_any: [pad-thai]
+      applied_constraints: {}
+      min_citations: 1
+      model_called: true
 
   - id: G-04
     group: time constraint

@@ -482,6 +482,14 @@ Each rule: statement, then **V:** verification method (test file, eval case id, 
 - **R-23** A refusal never includes a model-written explanation; a reviewer can
   recognise every refusal by `refused` and `refusal_reason` alone. **V:** I-02; harness
   checks `answer` equals the template (or starts with the safety disclaimer).
+- **R-24** Open questions are answered, not refused. A food question that names no
+  particular dish ("what can I cook with my kids", "something for dinner with friends",
+  "I have no idea what to cook") and whose parsed constraints leave candidates is answered
+  with recommendations from the retrieved set, one sentence per recipe; when the question
+  mentions an audience or occasion the recipes do not describe, the answer says so once.
+  `out_of_corpus` is reserved for a specific dish, ingredient or property that none of the
+  retrieved recipes has. The rule lives in the prompt (rule 3 of `answer.v3`). **V:** eval
+  G-03 (`refused = false`, empty `applied_constraints`, at least one citation); E-28, E-29.
 
 ### 5.4 Safety policy
 
@@ -649,8 +657,8 @@ them yourself and ask a qualified professional if you have a medical concern."
 | E-25 | "Under 0 minutes" | `max_minutes = 0`; nothing passes → `out_of_corpus` | R-12, R-19 |
 | E-26 | "Quick dinner in 45 minutes" | `max_minutes = 45` (explicit number wins) | R-17 |
 | E-27 | Two identical questions in a row | Same `refused`/`refusal_reason`/citations expected (temperature 0); text may differ | R-50 |
-| E-28 | "What can I cook with my kids?" | No constraints (`kid` matches no corpus ingredient line as a whole word); no refusal caused by a filter; the model answers or refuses on its own | parser, R-10, R-18 |
-| E-29 | "Dinner with friends" | Same: `friend` matches no ingredient line; `applied_constraints` empty | parser, R-10 |
+| E-28 | "What can I cook with my kids?" | No constraints (`kid` matches no corpus ingredient line as a whole word); no refusal caused by a filter; the model recommends recipes from the retrieved set (R-24) | parser, R-10, R-18, R-24 |
+| E-29 | "Dinner with friends" | Same: `friend` matches no ingredient line; `applied_constraints` empty; answered with suggestions (R-24) | parser, R-10, R-24 |
 | E-30 | "I have no idea what to cook" / "I have no time to cook" | `idea` and `time` are stopwords; the next word ("what", "to") is either shorter than `INGREDIENT_MIN_CHARS` or matches no ingredient line; `exclude_ingredients = []` | parser, R-10 |
 | E-31 | "Something in no more than 30 minutes" | `max_minutes = 30`, `exclude_ingredients = []`: time phrases parse first and are removed before markers | parser, R-10, R-17 |
 | E-32 | "Dessert without nuts" against a recipe whose ingredients list "almonds" or "walnuts" but never the word "nut" | Recipe excluded: `nut` expands through `INGREDIENT_GROUPS`; `exclude_ingredients = ["nut"]` | parser, R-10, R-15 |
@@ -706,7 +714,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `LLM_TIMEOUT_S` | 15 | | Per attempt |
 | `LLM_MAX_RETRIES` | 1 | | One retry on timeout, 5xx, 429, connection error, invalid output |
 | `LLM_RETRY_BACKOFF_S` | 0.5 | | Pause before the retry (R-50, R-61) |
-| `PROMPT_VERSION` | `answer.v2` | | File `prompts/answer.v2.md`. v1 let a four-recipe recommendation (G-06) run past `LLM_MAX_OUTPUT_TOKENS` (12.6 s, then 503); v2 bounds the answer at 150 words and sets a shape per question type |
+| `PROMPT_VERSION` | `answer.v3` | | File `prompts/answer.v3.md`. v1 let a four-recipe recommendation (G-06) run past `LLM_MAX_OUTPUT_TOKENS` (12.6 s, then 503); v2 bounds the answer at 150 words and sets a shape per question type; v3 adds the open-question rule (R-24) after "What can I cook with my kids?" came back `out_of_corpus` in production |
 | `PROMPT_RECIPE_MAX_CHARS` | 3000 | | Method truncation per recipe in the prompt |
 | `LOG_TOP_RANKED` | 10 | | Fused candidates kept in the request log line (R-70) |
 | `REFUSAL_TEMPLATES` | section 6 texts | | R-20 |
@@ -790,7 +798,8 @@ hit@1, hit@4 and MRR for BM25 only, embeddings only and hybrid.
 
 | Id | Group | Assertion |
 |---|---|---|
-| G-01, G-02, G-03 | Direct recipe lookup | not refused; `cites_any` the expected recipe |
+| G-01, G-02 | Direct recipe lookup | not refused; `cites_any` the expected recipe |
+| G-03 | Open question, no dish named (R-24, E-28) | not refused; `applied_constraints` empty; `min_citations: 1` |
 | G-04 | Time constraint | not refused; `constraints_satisfied`; `applied_constraints.max_minutes` equals the asked value |
 | G-05 | Diet constraint | not refused; `constraints_satisfied`; `applied_constraints.diet` |
 | G-06 | Ingredient exclusion ("without X") | not refused; `constraints_satisfied`; `exclude_ingredients` |
@@ -841,7 +850,7 @@ ADRs and README use `--runs 3` against production.
 | Answers only from the corpus | R-01, R-02, R-03, R-04 | `test_api_contract.py` (foreign id, URL from corpus, no-citation refusal); G-01..G-03, G-15 |
 | Citations with title and URL | R-03, R-05, I-05 | `test_api_contract.py`; harness I-05 on every response |
 | Polite machine-readable refusal | R-20, R-23, I-02..I-04 | `test_ask_pipeline.py::test_model_refusals_use_templates`; G-08..G-13 |
-| Out of corpus | R-19, R-22 | `test_ask_pipeline.py::test_filters_exhaust_candidates`; G-08, G-09 |
+| Out of corpus | R-19, R-22, R-24 | `test_ask_pipeline.py::test_filters_exhaust_candidates`; G-08, G-09; G-03 (open question answered) |
 | Out of domain | R-21, R-40 | G-10, G-11 |
 | Time constraint | R-10, R-12, R-17 | `test_constraints.py`; G-04, G-07 |
 | Diet constraint | R-10, R-13, 2.3 | `test_constraints.py`; `test_ingest.py` (diet category and veto, `test_veto_whole_word`, `test_veto_exceptions`); G-05, G-07 |
@@ -878,3 +887,4 @@ ADRs and README use `--runs 3` against production.
 | v1.8 | 2026-10-11 | R-36 and `TITLE_STOPWORDS`: the safety answer shows only the retrieved recipes whose title shares a word with the question, all of them when none does; G-12 cites the asked recipe; E-33, E-34. |
 | v1.9 | 2026-10-11 | `PROMPT_VERSION` answer.v1 → answer.v2 (bounded answer length) after the first local harness run; R-51 wording. |
 | v1.10 | 2026-10-11 | Alignment after the spec-auditor run following step 11: V: methods point at the tests that exist; rows for `TIME_PHRASE_MINUTES`, `EXCLUDE_SUFFIX`, `LLM_RETRY_BACKOFF_S`, `EMBED_BATCH`, `OPENAI_API_BASE`, `LOG_TOP_RANKED`; `TIME_PATTERNS` row matches the code; R-10 word and "free of" notes; R-62 no-key mode; R-63 model and dimension checks; RRF tie-break; 3.4 error mapping in full; R-70 level rule, 422 and attempts; 3.7 `required` and refusal card; R-31/R-55 empty ingredient lists; 12.1 file list; 12.3 measurement notes. |
+| v1.11 | 2026-10-11 | R-24 open questions are answered; `PROMPT_VERSION` answer.v3; G-03 becomes the open-question case (the third direct lookup, pad thai, is dropped to keep 15 cases); E-28/E-29 expected outcome. |
