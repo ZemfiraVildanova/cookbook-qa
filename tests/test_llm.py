@@ -53,3 +53,32 @@ def test_with_retry_retries_once_then_raises() -> None:
 
     with pytest.raises(llm.LLMInvalidOutputError):
         llm.with_retry(always, backoff_s=0)
+
+
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
+def test_anthropic_request_disables_thinking() -> None:
+    """R-50 / LLM_THINKING: the Anthropic request carries thinking={"type": LLM_THINKING}."""
+    from types import SimpleNamespace
+
+    from recipe_qa.config import LLM_MAX_OUTPUT_TOKENS, LLM_THINKING
+    from recipe_qa.llm import GenerationRequest
+    from recipe_qa.llm_anthropic import AnthropicClient
+
+    seen: dict[str, object] = {}
+
+    def create(**kwargs: object) -> SimpleNamespace:
+        seen.update(kwargs)
+        text = '{"status": "answered", "answer": "ok", "cited_ids": ["r1"]}'
+        return SimpleNamespace(
+            stop_reason="end_turn",
+            content=[SimpleNamespace(type="text", text=text)],
+            usage=SimpleNamespace(input_tokens=10, output_tokens=5),
+        )
+
+    client = AnthropicClient("test-key", "test-model")
+    client._client = SimpleNamespace(messages=SimpleNamespace(create=create))  # type: ignore[assignment]
+    result = client.generate(GenerationRequest(system="s", user="u", allowed_ids=["r1"]))
+    assert result.output.cited_ids == ["r1"] and result.attempts == 1
+    assert seen["thinking"] == {"type": LLM_THINKING}
+    assert seen["max_tokens"] == LLM_MAX_OUTPUT_TOKENS
+    assert "temperature" not in seen

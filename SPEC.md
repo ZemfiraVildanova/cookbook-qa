@@ -554,7 +554,8 @@ they can judge, and says that it cannot judge.
 
 - **R-50** At most one generation request per question, plus one retry on failure
   (R-61). Deterministic settings: `LLM_TEMPERATURE = 0`, `LLM_MAX_OUTPUT_TOKENS`,
-  `LLM_TIMEOUT_S`. **V:** `test_ask_pipeline.py` with a counting fake LLM; harness
+  `LLM_TIMEOUT_S`; extended thinking is switched off (`LLM_THINKING`), so output tokens
+  are the answer alone. **V:** `test_ask_pipeline.py` with a counting fake LLM; harness
   token report.
 - **R-51** The prompt is a versioned file `src/recipe_qa/prompts/<PROMPT_VERSION>.md`; the
   version is returned in `meta.prompt_version` and logged. A change of wording is a new
@@ -710,6 +711,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `LLM_PROVIDER` | `anthropic` | `LLM_PROVIDER` | `anthropic` or `openai` |
 | `LLM_MODEL` | `claude-haiku-5-5` | `LLM_MODEL` | Generation model id |
 | `LLM_TEMPERATURE` | 0 | | R-50; sent only to providers that accept sampling parameters. Anthropic's current models reject them, so the Anthropic adapter omits it and relies on structured output plus the three-run pass rule |
+| `LLM_THINKING` | `disabled` | | Sent to Anthropic as `thinking: {type}` (R-50). Measured 2026-10-11 on two golden prompts: the model's default emits a hidden thinking block, output 809–811 tokens and 4.6–4.9 s; `disabled` gives 241–282 tokens and 2.7 s with the same answers |
 | `LLM_MAX_OUTPUT_TOKENS` | 1000 | | Output cap, also a spend cap. 600 truncated a two-recipe comparison (JSON cut at max_tokens → 503), raised at step 9 |
 | `LLM_TIMEOUT_S` | 15 | | Per attempt |
 | `LLM_MAX_RETRIES` | 1 | | One retry on timeout, 5xx, 429, connection error, invalid output |
@@ -888,3 +890,4 @@ ADRs and README use `--runs 3` against production.
 | v1.9 | 2026-10-11 | `PROMPT_VERSION` answer.v1 → answer.v2 (bounded answer length) after the first local harness run; R-51 wording. |
 | v1.10 | 2026-10-11 | Alignment after the spec-auditor run following step 11: V: methods point at the tests that exist; rows for `TIME_PHRASE_MINUTES`, `EXCLUDE_SUFFIX`, `LLM_RETRY_BACKOFF_S`, `EMBED_BATCH`, `OPENAI_API_BASE`, `LOG_TOP_RANKED`; `TIME_PATTERNS` row matches the code; R-10 word and "free of" notes; R-62 no-key mode; R-63 model and dimension checks; RRF tie-break; 3.4 error mapping in full; R-70 level rule, 422 and attempts; 3.7 `required` and refusal card; R-31/R-55 empty ingredient lists; 12.1 file list; 12.3 measurement notes. |
 | v1.11 | 2026-10-11 | R-24 open questions are answered; `PROMPT_VERSION` answer.v3; G-03 becomes the open-question case (the third direct lookup, pad thai, is dropped to keep 15 cases); E-28/E-29 expected outcome. |
+| v1.12 | 2026-10-11 | `LLM_THINKING = disabled` sent to Anthropic (R-50): the model's default hidden thinking tripled output tokens and nearly doubled latency. |
