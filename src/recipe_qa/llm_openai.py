@@ -80,9 +80,12 @@ class OpenAIClient:
             if response.status_code != 200:
                 raise LLMUnavailableError(f"HTTP {response.status_code}: {response.text[:200]}")
             data = response.json()
-            if data.get("status") != "completed":
+            status = data.get("status")
+            if status == "incomplete":  # cut at max_output_tokens or a content filter (3.4)
                 reason = (data.get("incomplete_details") or {}).get("reason")
-                raise LLMInvalidOutputError(f"response {data.get('status')}: {reason}")
+                raise LLMInvalidOutputError(f"response incomplete: {reason}")
+            if status != "completed":  # failed, cancelled, in_progress: an API failure (3.4)
+                raise LLMUnavailableError(f"response status {status}")
             text: str | None = None
             for item in data.get("output", []):
                 if item.get("type") != "message":
