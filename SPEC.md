@@ -554,8 +554,8 @@ they can judge, and says that it cannot judge.
 
 - **R-50** At most one generation request per question, plus one retry on failure
   (R-61). Deterministic settings: `LLM_TEMPERATURE = 0`, `LLM_MAX_OUTPUT_TOKENS`,
-  `LLM_TIMEOUT_S`; extended thinking is switched off (`LLM_THINKING`), so output tokens
-  are the answer alone. **V:** `test_ask_pipeline.py` with a counting fake LLM; harness
+  `LLM_TIMEOUT_S`; hidden reasoning is switched off (`LLM_THINKING` for Anthropic,
+  `LLM_REASONING_EFFORT` for OpenAI), so output tokens are the answer alone. **V:** `test_ask_pipeline.py` with a counting fake LLM; harness
   token report.
 - **R-51** The prompt is a versioned file `src/recipe_qa/prompts/<PROMPT_VERSION>.md`; the
   version is returned in `meta.prompt_version` and logged. A change of wording is a new
@@ -567,7 +567,12 @@ they can judge, and says that it cannot judge.
   check at step 9.
 - **R-54** Provider and model are chosen by environment (`LLM_PROVIDER`, `LLM_MODEL`);
   default `anthropic` / `claude-haiku-5-5`. The final default is set by the bake-off at
-  step 13 and recorded in ADR-003. **V:** `test_ask_pipeline.py::test_normal_answer_with_citations_from_corpus`.
+  step 13 and recorded in ADR-003. The OpenAI adapter (`llm_openai.py`) calls
+  `POST /v1/responses` over HTTP with a strict JSON-schema `text.format`, `store = false`,
+  the same output schema and the same error mapping (3.4). **V:**
+  `test_ask_pipeline.py::test_normal_answer_with_citations_from_corpus`,
+  `test_llm.py::test_make_llm_client_selects_provider`,
+  `test_llm.py::test_openai_request_and_response_shape`.
 - **R-55** Each retrieved recipe is passed to the model as id, title, total time, diet
   flags, ingredient lines and method; the method is truncated to
   `PROMPT_RECIPE_MAX_CHARS` with a visible `[truncated]` marker; an empty ingredient list
@@ -712,6 +717,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `LLM_MODEL` | `claude-haiku-5-5` | `LLM_MODEL` | Generation model id |
 | `LLM_TEMPERATURE` | 0 | | R-50; sent only to providers that accept sampling parameters. Anthropic's current models reject them, so the Anthropic adapter omits it and relies on structured output plus the three-run pass rule |
 | `LLM_THINKING` | `disabled` | | Sent to Anthropic as `thinking: {type}` (R-50). Measured 2026-10-11 on two golden prompts: the model's default emits a hidden thinking block, output 809–811 tokens and 4.6–4.9 s; `disabled` gives 241–282 tokens and 2.7 s with the same answers |
+| `LLM_REASONING_EFFORT` | `none` | | Sent to OpenAI as `reasoning.effort` (R-50); `gpt-6-luna` defaults to `medium` and bills hidden reasoning as output tokens |
 | `LLM_MAX_OUTPUT_TOKENS` | 1000 | | Output cap, also a spend cap. 600 truncated a two-recipe comparison (JSON cut at max_tokens → 503), raised at step 9 |
 | `LLM_TIMEOUT_S` | 15 | | Per attempt |
 | `LLM_MAX_RETRIES` | 1 | | One retry on timeout, 5xx, 429, connection error, invalid output |
@@ -898,3 +904,4 @@ ADRs and README use `--runs 3` against production.
 | v1.11 | 2026-10-11 | R-24 open questions are answered; `PROMPT_VERSION` answer.v3; G-03 becomes the open-question case (the third direct lookup, pad thai, is dropped to keep 15 cases); E-28/E-29 expected outcome. |
 | v1.12 | 2026-10-11 | `LLM_THINKING = disabled` sent to Anthropic (R-50): the model's default hidden thinking tripled output tokens and nearly doubled latency. |
 | v1.13 | 2026-10-11 | Section 11: eval gate details, artifact name, the three post-deploy smoke cases, daily schedule and `smoke_only` dispatch. |
+| v1.14 | 2026-10-11 | OpenAI adapter for the bake-off (R-54): `/v1/responses` over HTTP, `LLM_REASONING_EFFORT = none`. |

@@ -319,6 +319,7 @@ LLM_MAX_OUTPUT_TOKENS: Final = 1000
 LLM_THINKING: Final = (
     "disabled"  # Anthropic `thinking.type`; the default thinks ~500 hidden tokens per answer
 )
+LLM_REASONING_EFFORT: Final = "none"  # OpenAI `reasoning.effort`; default medium bills reasoning
 LLM_TIMEOUT_S: Final = 15.0
 LLM_MAX_RETRIES: Final = 1
 LLM_RETRY_BACKOFF_S: Final = 0.5  # pause before the single retry (R-50, R-61)
