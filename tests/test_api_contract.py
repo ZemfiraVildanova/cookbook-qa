@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -95,6 +96,24 @@ def test_root_serves_html(client: TestClient) -> None:
     r = client.get("/")
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("text/html")
+
+
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
+def test_built_ui_keeps_api_routes(tmp_path: Path) -> None:
+    """SPEC 3.1: with a built UI, / is index.html and files live under /assets/; GET /ask stays
+    405 and unknown paths 404, so the UI never shadows the API."""
+    (tmp_path / "assets").mkdir()
+    (tmp_path / "index.html").write_text("<!doctype html><title>ui</title>", encoding="utf-8")
+    (tmp_path / "assets" / "app.css").write_text("body{}", encoding="utf-8")
+    settings = Settings(git_sha="testsha", _env_file=None)  # type: ignore[call-arg]
+    app = create_app(settings, static_dir=tmp_path)
+    with TestClient(app, raise_server_exceptions=False) as c:
+        root = c.get("/")
+        assert root.status_code == 200 and "ui" in root.text
+        assert root.headers["content-type"].startswith("text/html")
+        assert c.get("/assets/app.css").status_code == 200
+        assert c.get("/ask").status_code == 405
+        assert c.get("/nope").status_code == 404
 
 
 def test_response_schema_matches_spec() -> None:

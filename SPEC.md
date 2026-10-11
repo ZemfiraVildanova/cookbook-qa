@@ -177,10 +177,11 @@ third-party content.
 |---|---|---|
 | `POST /ask` | Answer one question. | none |
 | `GET /health` | Liveness and deployed version. Never calls an external API. | none |
-| `GET /` and static assets | The single-page UI (Vite build served by FastAPI). | none |
+| `GET /` and `GET /assets/*` | The single-page UI (Vite build served by FastAPI: `index.html` at `/`, its files under `/assets/`). | none |
 | `GET /openapi.json`, `GET /docs` | FastAPI's generated schema and viewer; the schema is derived from `schemas.py`. | none |
 
-No other routes exist. Unknown paths return FastAPI's default 404.
+No other routes exist. Unknown paths return FastAPI's default 404 and `GET /ask` is 405
+whether or not the UI is built: the UI never shadows the API routes.
 
 ### 3.2 `POST /ask` request
 
@@ -905,3 +906,4 @@ ADRs and README use `--runs 3` against production.
 | v1.12 | 2026-10-11 | `LLM_THINKING = disabled` sent to Anthropic (R-50): the model's default hidden thinking tripled output tokens and nearly doubled latency. |
 | v1.13 | 2026-10-11 | Section 11: eval gate details, artifact name, the three post-deploy smoke cases, daily schedule and `smoke_only` dispatch. |
 | v1.14 | 2026-10-11 | OpenAI adapter for the bake-off (R-54): `/v1/responses` over HTTP, `LLM_REASONING_EFFORT = none`. |
+| v1.15 | 2026-10-11 | 3.1: the built UI is served at `/` and `/assets/*` only; with the catch-all static mount `GET /ask` returned 404 instead of 405 (found at step 15). |
