@@ -130,6 +130,7 @@ def test_openai_request_and_response_shape() -> None:
     assert fmt["schema"]["properties"]["cited_ids"]["items"]["enum"] == ["r1"]
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_openai_errors_map_to_spec_codes() -> None:
     """3.4: truncated or refused output is llm_invalid_output; 5xx is llm_unavailable."""
     import httpx
@@ -153,6 +154,10 @@ def test_openai_errors_map_to_spec_codes() -> None:
         transport = httpx.MockTransport(lambda _r, c=canned: httpx.Response(200, json=c))
         with pytest.raises(LLMInvalidOutputError):
             OpenAIClient("k", "m", transport=transport).generate(req)
+    failed = {"status": "failed", "error": {"code": "server_error"}, "output": [], "usage": {}}
+    transport = httpx.MockTransport(lambda _r: httpx.Response(200, json=failed))
+    with pytest.raises(LLMUnavailableError):  # 3.4: a failed response is an API failure, retried
+        OpenAIClient("k", "m", transport=transport).generate(req)
     calls = 0
 
     def down(_request: httpx.Request) -> httpx.Response:

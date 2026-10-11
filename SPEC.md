@@ -284,7 +284,7 @@ Field semantics:
 | Status | When | Body |
 |---|---|---|
 | 422 | Request fails validation (3.2) or the body is not valid JSON. | FastAPI's default `{"detail": [...]}`. Documented in OpenAPI. |
-| 503 | The generation model failed after the retry (timeout, 5xx, 429, connection error or any other API status error: `llm_unavailable`; when no model is configured the same code is returned without a call) or, after the retry, returned output that is not valid against the output schema, was cut at `LLM_MAX_OUTPUT_TOKENS`, or ended with the provider's refusal stop reason (`llm_invalid_output`). | `{"error": {"code": "<code>", "message": "<short English text>", "request_id": "<uuid>"}}` |
+| 503 | The generation model failed after the retry (timeout, 5xx, 429, connection error or any other API status error: `llm_unavailable`; when no model is configured the same code is returned without a call) or, after the retry, returned output that is not valid against the output schema, was cut at `LLM_MAX_OUTPUT_TOKENS`, or ended with the provider's refusal stop reason (`llm_invalid_output`); a response whose status is `failed` or `cancelled` counts as an API failure (`llm_unavailable`). | `{"error": {"code": "<code>", "message": "<short English text>", "request_id": "<uuid>"}}` |
 | 500 | Unexpected exception. | Same shape, `code = "internal"`. |
 
 An operational failure is never disguised as a refusal (R-61). Error responses also carry
