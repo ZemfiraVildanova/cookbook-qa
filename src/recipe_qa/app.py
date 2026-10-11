@@ -20,6 +20,7 @@ from recipe_qa.config import EMBEDDING_DIM, EMBEDDING_MODEL, STATIC_DIR, Setting
 from recipe_qa.corpus import load_corpus
 from recipe_qa.llm import LLMClient, LLMError
 from recipe_qa.llm_anthropic import AnthropicClient
+from recipe_qa.llm_openai import OpenAIClient
 from recipe_qa.pipeline import Deps, Pipeline
 from recipe_qa.retrieval import Embedder, OpenAIEmbedder, load_index
 from recipe_qa.schemas import AskRequest, AskResponse, ErrorBody, ErrorResponse, HealthResponse
@@ -56,6 +57,8 @@ def make_llm_client(settings: Settings) -> LLMClient | None:
     """R-54: provider and model from the environment; None when the key is missing."""
     if settings.llm_provider == "anthropic" and settings.anthropic_api_key is not None:
         return AnthropicClient(settings.anthropic_api_key.get_secret_value(), settings.llm_model)
+    if settings.llm_provider == "openai" and settings.openai_api_key is not None:
+        return OpenAIClient(settings.openai_api_key.get_secret_value(), settings.llm_model)
     return None
 
 

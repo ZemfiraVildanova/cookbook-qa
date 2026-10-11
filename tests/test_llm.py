@@ -96,7 +96,6 @@ def _openai_body(text: str) -> dict[str, object]:
     }
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_openai_request_and_response_shape() -> None:
     """R-50, R-54: /responses with a strict JSON schema, reasoning off, store off, no sampling."""
     import httpx
@@ -131,7 +130,6 @@ def test_openai_request_and_response_shape() -> None:
     assert fmt["schema"]["properties"]["cited_ids"]["items"]["enum"] == ["r1"]
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_openai_errors_map_to_spec_codes() -> None:
     """3.4: truncated or refused output is llm_invalid_output; 5xx is llm_unavailable."""
     import httpx
@@ -167,7 +165,6 @@ def test_openai_errors_map_to_spec_codes() -> None:
     assert calls == 2 and info.value.attempts == 2
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_make_llm_client_selects_provider() -> None:
     """R-54: provider and model come from settings; a missing key means no client."""
     from pydantic import SecretStr
