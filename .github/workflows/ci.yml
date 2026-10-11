@@ -75,8 +75,11 @@ jobs:
           done
           sha=$(curl -fsS http://localhost:8000/health | jq -r .git_sha)
           test "$sha" = "$GITHUB_SHA" || { echo "git_sha mismatch: $sha"; docker logs cq; exit 1; }
+          # No keys in this job: a safety question is answered before the model (SPEC R-30), so it
+          # proves the pipeline, corpus and index work; the model path is covered by the eval gate.
           curl -fsS -X POST http://localhost:8000/ask -H 'content-type: application/json' \
-            -d '{"question":"How do I make carbonara?"}' | jq -e '.refused != null and .meta.request_id != null'
+            -d '{"question":"Is this nut-free?"}' \
+            | jq -e '.refused == true and .refusal_reason == "safety" and .meta.request_id != null'
           docker rm -f cq
       - uses: docker/login-action@v4
         with:
