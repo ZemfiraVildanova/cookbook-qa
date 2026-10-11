@@ -1,0 +1,108 @@
+{
+  "apiVersion": "v1.2",
+  "name": "cookbook-qa",
+  "description": "Recipe QA service: project, secret group and deployment service from a prebuilt GHCR image. Run by CI with the image tag and keys as arguments.",
+  "arguments": {
+    "IMAGE": "ghcr.io/zemfiravildanova/cookbook-qa:latest",
+    "ANTHROPIC_API_KEY": "set-at-run-time",
+    "OPENAI_API_KEY": "set-at-run-time"
+  },
+  "options": {
+    "autorun": false,
+    "concurrencyPolicy": "queue"
+  },
+  "spec": {
+    "kind": "Workflow",
+    "spec": {
+      "type": "sequential",
+      "steps": [
+        {
+          "kind": "Project",
+          "ref": "project",
+          "spec": {
+            "name": "cookbook-qa",
+            "region": "europe-west"
+          }
+        },
+        {
+          "kind": "Workflow",
+          "spec": {
+            "type": "sequential",
+            "context": {
+              "projectId": "${refs.project.id}"
+            },
+            "steps": [
+              {
+                "kind": "SecretGroup",
+                "ref": "secrets",
+                "spec": {
+                  "name": "cookbook-qa-secrets",
+                  "type": "secret",
+                  "secretType": "environment-arguments",
+                  "priority": 10,
+                  "secrets": {
+                    "variables": {
+                      "ANTHROPIC_API_KEY": "${args.ANTHROPIC_API_KEY}",
+                      "OPENAI_API_KEY": "${args.OPENAI_API_KEY}",
+                      "LLM_PROVIDER": "anthropic",
+                      "LLM_MODEL": "claude-haiku-5-5",
+                      "LOG_LEVEL": "INFO"
+                    },
+                    "files": {}
+                  },
+                  "restrictions": {
+                    "restricted": false,
+                    "nfObjects": [],
+                    "tags": []
+                  }
+                }
+              },
+              {
+                "kind": "DeploymentService",
+                "ref": "service",
+                "spec": {
+                  "name": "web",
+                  "infrastructure": {
+                    "architecture": "x86"
+                  },
+                  "billing": {
+                    "deploymentPlan": "nf-compute-20"
+                  },
+                  "deployment": {
+                    "type": "deployment",
+                    "instances": 1,
+                    "external": {
+                      "imagePath": "${args.IMAGE}",
+                      "credentials": "ghcr"
+                    }
+                  },
+                  "ports": [
+                    {
+                      "name": "p01",
+                      "internalPort": 8000,
+                      "protocol": "HTTP",
+                      "public": true
+                    }
+                  ],
+                  "healthChecks": [
+                    {
+                      "protocol": "HTTP",
+                      "type": "readinessProbe",
+                      "port": 8000,
+                      "path": "/health",
+                      "initialDelaySeconds": 5,
+                      "periodSeconds": 30,
+                      "timeoutSeconds": 10,
+                      "failureThreshold": 3,
+                      "successThreshold": 1
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
