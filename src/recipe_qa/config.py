@@ -316,7 +316,7 @@ LLM_TEMPERATURE: Final = 0.0
 LLM_MAX_OUTPUT_TOKENS: Final = 1000
 LLM_TIMEOUT_S: Final = 15.0
 LLM_MAX_RETRIES: Final = 1
-PROMPT_VERSION: Final = "answer.v1"
+PROMPT_VERSION: Final = "answer.v2"
 PROMPT_RECIPE_MAX_CHARS: Final = 3000
 
 # --- Serving (SPEC 3.1) -----------------------------------------------------------------

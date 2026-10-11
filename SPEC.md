@@ -544,9 +544,9 @@ they can judge, and says that it cannot judge.
   (R-61). Deterministic settings: `LLM_TEMPERATURE = 0`, `LLM_MAX_OUTPUT_TOKENS`,
   `LLM_TIMEOUT_S`. **V:** `test_api_contract.py` with a counting fake LLM; harness
   token report.
-- **R-51** The prompt is a versioned file `src/recipe_qa/prompts/answer.v1.md`; the
+- **R-51** The prompt is a versioned file `src/recipe_qa/prompts/<PROMPT_VERSION>.md`; the
   version is returned in `meta.prompt_version` and logged. A change of wording is a new
-  version file. **V:** `test_api_contract.py::test_meta_prompt_version`.
+  version file; superseded versions stay in the repository. **V:** `test_api_contract.py::test_meta_prompt_version`.
 - **R-52** When two retrieved recipes describe the same dish and differ (ingredients,
   times, steps), the answer names both variants and cites each. **V:** eval G-14
   (`cites_all` on a committed pair).
@@ -690,7 +690,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `LLM_MAX_OUTPUT_TOKENS` | 1000 | | Output cap, also a spend cap. 600 truncated a two-recipe comparison (JSON cut at max_tokens → 503), raised at step 9 |
 | `LLM_TIMEOUT_S` | 15 | | Per attempt |
 | `LLM_MAX_RETRIES` | 1 | | One retry on timeout, 5xx, 429, connection error, invalid output |
-| `PROMPT_VERSION` | `answer.v1` | | File `prompts/answer.v1.md` |
+| `PROMPT_VERSION` | `answer.v2` | | File `prompts/answer.v2.md`. v1 let a four-recipe recommendation (G-06) run past `LLM_MAX_OUTPUT_TOKENS` (12.6 s, then 503); v2 bounds the answer at 150 words and sets a shape per question type |
 | `PROMPT_RECIPE_MAX_CHARS` | 3000 | | Method truncation per recipe in the prompt |
 | `REFUSAL_TEMPLATES` | section 6 texts | | R-20 |
 | `SAFETY_DISCLAIMER` | section 6 text | | R-31 |
@@ -856,3 +856,4 @@ ADRs and README use `--runs 3` against production.
 | v1.6 | 2026-10-11 | `LLM_MAX_OUTPUT_TOKENS` 600 → 1000 after a truncated comparison; `LLM_TEMPERATURE` not sent to Anthropic (`f1e7950`). |
 | v1.7 | 2026-10-11 | 3.7: the single-page UI, its four states and the generated API types. |
 | v1.8 | 2026-10-11 | R-36 and `TITLE_STOPWORDS`: the safety answer shows only the retrieved recipes whose title shares a word with the question, all of them when none does; G-12 cites the asked recipe; E-33, E-34. |
+| v1.9 | 2026-10-11 | `PROMPT_VERSION` answer.v1 → answer.v2 (bounded answer length) after the first local harness run; R-51 wording. |
