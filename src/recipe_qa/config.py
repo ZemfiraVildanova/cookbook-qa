@@ -265,6 +265,23 @@ VETO_EXCEPTIONS: Final = (
 )
 DIET_CATEGORIES: Final = {"vegetarian": "Vegetarian recipes", "vegan": "Vegan recipes"}
 
+# --- Page structure at ingest (SPEC 2.2) -----------------------------------------------
+INGREDIENT_HEADINGS: Final = ("ingredient",)  # substring match on section titles
+METHOD_HEADINGS: Final = (
+    "procedure",
+    "preparation",
+    "method",
+    "directions",
+    "instructions",
+    "steps",
+)
+TIME_TOTAL_LABELS: Final = (
+    "total",
+    "time",
+    "total time",
+    "ready in",
+)  # single labelled part = total
+
 # --- Generation (SPEC 5.6) --------------------------------------------------------------
 LLM_TEMPERATURE: Final = 0.0
 LLM_MAX_OUTPUT_TOKENS: Final = 600

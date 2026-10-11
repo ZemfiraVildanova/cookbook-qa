@@ -8,8 +8,6 @@ import pytest
 
 from recipe_qa import ingest
 
-pytestmark = pytest.mark.xfail(strict=True, reason="implemented in next commit")
-
 FIXTURES = Path(__file__).parent / "fixtures"
 
 

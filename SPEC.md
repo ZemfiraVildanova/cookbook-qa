@@ -93,8 +93,8 @@ close it. None of them is built, even partially.
 | `has_summary_template` | bool | Page contains `{{recipesummary ...}}` (case-insensitive, space or underscore). |
 | `total_minutes` | int or null | Section 2.3. |
 | `diet` | `{"vegetarian": "yes" \| "no" \| "unknown", "vegan": same}` | Section 2.3. |
-| `ingredients` | string[] | Plain-text ingredient lines from the ingredients section(s) (list items under a heading that contains "ingredient"). Empty list means unknown. |
-| `method` | string | Plain text of the procedure section(s), subsection headings kept as lines. |
+| `ingredients` | string[] | Plain-text bullet lines from the section(s) whose title matches `INGREDIENT_HEADINGS`, subsections included; if there is none, the first section before the method with at least 3 bullets. Empty list means unknown. |
+| `method` | string | Plain text of the section(s) whose title matches `METHOD_HEADINGS`, list markers removed, subsection headings kept as lines. |
 | `summary` | string | Plain text of the lead paragraph(s) before the first heading; may be empty. |
 
 Markup cleaning: templates other than `recipesummary` are dropped, wiki links keep their
@@ -104,13 +104,16 @@ real pages.
 
 ### 2.3 Metadata derivation (deterministic, tested)
 
-**Total time** (`total_minutes`), first rule that applies:
+**Total time** (`total_minutes`), from the `time=` parameter of `recipesummary` only
+(pages without the template have unknown time); first rule that applies:
 
-1. `time=` parameter of `recipesummary`, parsed as a duration.
-2. Both a preparation time and a cooking time are present (template parameters or
-   labelled lines such as "Prep time: 10 minutes") → their sum.
-3. Otherwise `null` (unknown). A single partial time is **not** used as the total, so a
-   filter never passes a recipe on an under-estimate.
+1. One value without a label, or one labelled with a total label (`TIME_TOTAL_LABELS`),
+   parsed as a duration.
+2. Two or more labelled parts separated by `<br/>`, newlines or semicolons ("Prep: 15–20
+   minutes<br/>Cooking time: 1½ hours") → their sum, provided every part parses. Soaking,
+   resting and similar parts are included, which can only over-estimate.
+3. Otherwise `null` (unknown): a single partial part ("Prep: 10 min"), or any part that
+   does not parse ("Soak: overnight"). A filter never passes a recipe on an under-estimate.
 
 Duration parsing: hours and minutes in words or abbreviations ("1 hour 15 min",
 "1½ hours", "45 minutes", "2 hrs"); a range ("30–40 minutes", "30 to 40 min") takes the
@@ -631,6 +634,9 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `VEGAN_VETO_TERMS` | `VEGETARIAN_VETO_TERMS` + milk, butter, cheese, cream, yogurt, yoghurt, egg, eggs, honey, ghee, whey, parmesan, pecorino, mozzarella, ricotta, mascarpone | | 2.3; whole-word, plural-tolerant matching |
 | `VETO_EXCEPTIONS` | coconut milk, almond milk, soy milk, oat milk, rice milk, coconut cream, cream of tartar, peanut butter, almond butter, cocoa butter, nut butter, vegetable stock, vegetable broth | | 2.3; phrases removed from an ingredient line before veto matching; also removed before the `dairy` group exclusion (R-15) |
 | `DIET_CATEGORIES` | vegetarian: "Vegetarian recipes"; vegan: "Vegan recipes" | | 2.3 |
+| `INGREDIENT_HEADINGS` | ingredient (substring of a section title) | | 2.2: sections whose bullets are ingredient lines; fallback is the first list of 3+ bullets before the method |
+| `METHOD_HEADINGS` | procedure, preparation, method, directions, instructions, steps | | 2.2: sections that form `method` |
+| `TIME_TOTAL_LABELS` | total, time, total time, ready in | | 2.3: a single labelled time part with one of these labels is the total; any other single label is partial |
 | `LLM_PROVIDER` | `anthropic` | `LLM_PROVIDER` | `anthropic` or `openai` |
 | `LLM_MODEL` | `claude-haiku-5-5` | `LLM_MODEL` | Generation model id |
 | `LLM_TEMPERATURE` | 0 | | R-50 |
