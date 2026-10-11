@@ -98,7 +98,6 @@ def test_root_serves_html(client: TestClient) -> None:
     assert r.headers["content-type"].startswith("text/html")
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_built_ui_keeps_api_routes(tmp_path: Path) -> None:
     """SPEC 3.1: with a built UI, / is index.html and files live under /assets/; GET /ask stays
     405 and unknown paths 404, so the UI never shadows the API."""

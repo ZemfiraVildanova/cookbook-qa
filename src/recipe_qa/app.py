@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from recipe_qa.config import EMBEDDING_DIM, EMBEDDING_MODEL, STATIC_DIR, Settings, get_settings
@@ -74,8 +74,10 @@ def _error_response(status: int, code: str, message: str, request_id: str) -> JS
     )
 
 
-def create_app(settings: Settings | None = None, deps: Deps | None = None) -> FastAPI:
-    """Build the application. `settings` and `deps` are injectable for tests."""
+def create_app(
+    settings: Settings | None = None, deps: Deps | None = None, static_dir: Path | None = None
+) -> FastAPI:
+    """Build the application. `settings`, `deps` and `static_dir` are injectable for tests."""
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -138,9 +140,17 @@ def create_app(settings: Settings | None = None, deps: Deps | None = None) -> Fa
         pipeline: Pipeline = request.app.state.pipeline
         return pipeline.ask(body.question, _request_id(request))
 
-    static_dir = Path(STATIC_DIR)
-    if static_dir.is_dir():
-        app.mount("/", StaticFiles(directory=static_dir, html=True), name="ui")
+    ui_dir = Path(STATIC_DIR) if static_dir is None else static_dir
+    index = ui_dir / "index.html"
+    if index.is_file():  # SPEC 3.1: the UI is / and /assets/*; it never shadows API routes
+        assets = ui_dir / "assets"
+        if assets.is_dir():
+            app.mount("/assets", StaticFiles(directory=assets), name="assets")
+
+        @app.get("/", include_in_schema=False)
+        async def ui() -> FileResponse:
+            return FileResponse(index, media_type="text/html")
+
     else:
 
         @app.get("/", include_in_schema=False)
