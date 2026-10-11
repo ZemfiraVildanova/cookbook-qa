@@ -1,0 +1,106 @@
+# Corpus manifest (SPEC 2.1). `scripts/ingest.py` builds data/corpus.json from exactly these
+# pages; data/corpus.lock.json pins the revision of each page.
+#
+# Selection rationale (2026-10-11, from `scripts/ingest.py --list` over the categories below):
+# - Six groups: soups, desserts, vegetarian/vegan dishes, pasta and noodles, and two national
+#   cuisines (Italian, Indian) plus a small Mexican group. Pad Thai and Chow Mein cover noodles;
+#   Edikang Ikong and Taco Soup widen the cuisine spread.
+# - Same-dish pairs (16) make "recipes that disagree" testable: Pasta and Bean Soup, Tres Leches
+#   Cake, Snickerdoodles, Banana Cream Pie, Macaroni and Cheese (three variants), Hummus,
+#   Pancakes, Ratatouille, Shakshuka, Pesto, Risotto, Eggplant Parmesan, Focaccia, Baingan
+#   Bartha, Tadka Dhal, Salsa.
+# - Different levels of structure: Wikibooks search (`-hastemplate:"Recipe summary"`) finds only
+#   two pages without the summary template among the categories used (Edikang Ikong, Shakshuka);
+#   both are included. Focaccia I lists ingredients in a wikitable; Edikang Ikong uses
+#   "Recipe"/"Preparation" headings; 23 pages declare no time (unknown time filters never pass).
+# - Time coverage: 32 of 55 pages declare a parseable time, so time constraints have recall.
+# - Diet coverage: well over 10 pages carry a Vegetarian or Vegan category.
+# Categories listed with --list: "Soup recipes", "Dessert recipes", "Recipes using pasta and
+# noodles", "Italian recipes", "Indian recipes", "Mexican recipes", "Vegetarian recipes",
+# "Vegan recipes". The categories "Pasta recipes" and "Noodle recipes" are empty on Wikibooks.
+source: https://en.wikibooks.org/w/api.php
+license: CC BY-SA 4.0
+
+pages:
+  # --- soups ---
+  - { title: "Cookbook:Stracciatella I", group: soups }
+  - { title: "Cookbook:Pasta and Bean Soup (Pasta e Fagioli)", group: soups }
+  - { title: "Cookbook:Pasta and Bean Soup", group: soups }
+  - { title: "Cookbook:Edikang Ikong", group: soups }  # no summary template, Nigerian
+  - { title: "Cookbook:Vegetable Soup", group: soups }
+  - { title: "Cookbook:Yellow Split Pea Soup", group: soups }
+  - { title: "Cookbook:Gazpacho", group: soups }
+  - { title: "Cookbook:Taco Soup", group: soups }
+  # --- desserts ---
+  - { title: "Cookbook:Tres Leches Cake I", group: desserts }
+  - { title: "Cookbook:Tres Leches Cake II", group: desserts }
+  - { title: "Cookbook:Snickerdoodles I", group: desserts }
+  - { title: "Cookbook:Snickerdoodles IV", group: desserts }
+  - { title: "Cookbook:Banana Cream Pie I", group: desserts }
+  - { title: "Cookbook:Banana Cream Pie II", group: desserts }
+  - { title: "Cookbook:Rhubarb Pie", group: desserts }
+  - { title: "Cookbook:Sachertorte", group: desserts }
+  - { title: "Cookbook:Stroopwafels", group: desserts }
+  - { title: "Cookbook:Rasmalai (Indian Cheese and Milk Dessert)", group: desserts }
+  - { title: "Cookbook:Soft Sugar Cookies", group: desserts }
+  # --- vegetarian and vegan dishes ---
+  - { title: "Cookbook:Macaroni and Cheese I", group: vegetarian }
+  - { title: "Cookbook:Macaroni and Cheese (Baked)", group: vegetarian }
+  - { title: "Cookbook:Macaroni and Cheese (Vegan)", group: vegetarian }
+  - { title: "Cookbook:Hummus I", group: vegetarian }
+  - { title: "Cookbook:Hummus (Greek)", group: vegetarian }
+  - { title: "Cookbook:Pancakes (Vegan)", group: vegetarian }
+  - { title: "Cookbook:Pancakes (North American)", group: vegetarian }
+  - { title: "Cookbook:Ratatouille I", group: vegetarian }
+  - { title: "Cookbook:Ratatouille II", group: vegetarian }
+  - { title: "Cookbook:Shakshuka", group: vegetarian }  # no summary template
+  - { title: "Cookbook:Shakshuka I", group: vegetarian }
+  - { title: "Cookbook:Keralan Vegetable Stew", group: vegetarian }
+  - { title: "Cookbook:Chow Mein", group: vegetarian }
+  # --- pasta and noodles ---
+  - { title: "Cookbook:Spaghetti alla Carbonara", group: pasta }
+  - { title: "Cookbook:Pesto I", group: pasta }
+  - { title: "Cookbook:Pesto II", group: pasta }
+  - { title: "Cookbook:Basic Lasagna", group: pasta }
+  - { title: "Cookbook:Alfredo Sauce", group: pasta }
+  - { title: "Cookbook:Garlic Parmesan Pasta", group: pasta }
+  - { title: "Cookbook:Pad Thai", group: pasta }
+  # --- Italian cuisine ---
+  - { title: "Cookbook:Risotto (Basic)", group: italian }
+  - { title: "Cookbook:Risotto alla Milanese", group: italian }
+  - { title: "Cookbook:Eggplant Parmesan (Melanzane alla Parmigiana) I", group: italian }
+  - { title: "Cookbook:Eggplant Parmesan (Melanzane alla Parmigiana) II", group: italian }
+  - { title: "Cookbook:Focaccia I", group: italian }  # ingredients in a wikitable
+  - { title: "Cookbook:Focaccia II", group: italian }
+  # --- Indian cuisine ---
+  - { title: "Cookbook:Chicken Curry", group: indian }
+  - { title: "Cookbook:Dal Makhani (Black Gram with Cream)", group: indian }
+  - { title: "Cookbook:Baingan Bartha (South Indian Eggplant with Coconut and Chili) I", group: indian }
+  - { title: "Cookbook:Baingan Bartha (South Indian Eggplant with Chili) II", group: indian }
+  - { title: "Cookbook:Tadka Dhal (Spiced Lentil Curry) I", group: indian }
+  - { title: "Cookbook:Tadka Dhal (Spiced Lentil Curry) II", group: indian }
+  - { title: "Cookbook:Matar Paneer", group: indian }
+  # --- Mexican cuisine ---
+  - { title: "Cookbook:Salsa Fresca", group: mexican }
+  - { title: "Cookbook:Salsa (recipe)", group: mexican }
+  - { title: "Cookbook:Guacamole I", group: mexican }
+
+# Same-dish pairs, by recipe id (slug of the title). Used by tests/test_corpus_integrity.py,
+# evals/retrieval_eval.py and the golden case G-14.
+pairs:
+  - [pasta-and-bean-soup-pasta-e-fagioli, pasta-and-bean-soup]
+  - [tres-leches-cake-i, tres-leches-cake-ii]
+  - [snickerdoodles-i, snickerdoodles-iv]
+  - [banana-cream-pie-i, banana-cream-pie-ii]
+  - [macaroni-and-cheese-i, macaroni-and-cheese-baked, macaroni-and-cheese-vegan]
+  - [hummus-i, hummus-greek]
+  - [pancakes-vegan, pancakes-north-american]
+  - [ratatouille-i, ratatouille-ii]
+  - [shakshuka, shakshuka-i]
+  - [pesto-i, pesto-ii]
+  - [risotto-basic, risotto-alla-milanese]
+  - [eggplant-parmesan-melanzane-alla-parmigiana-i, eggplant-parmesan-melanzane-alla-parmigiana-ii]
+  - [focaccia-i, focaccia-ii]
+  - [baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i, baingan-bartha-south-indian-eggplant-with-chili-ii]
+  - [tadka-dhal-spiced-lentil-curry-i, tadka-dhal-spiced-lentil-curry-ii]
+  - [salsa-fresca, salsa-recipe]
