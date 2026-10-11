@@ -240,7 +240,6 @@ def test_corpus_version_is_deterministic() -> None:
     assert ingest.corpus_version(a) != ingest.corpus_version(a[:1])
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_ingredient_table_rows() -> None:
     """SPEC 2.2: an ingredients section laid out as a wikitable yields one line per row."""
     lines = ingest.ingredient_lines(fixture("focaccia_i"))

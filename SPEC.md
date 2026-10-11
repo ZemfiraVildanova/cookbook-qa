@@ -93,7 +93,7 @@ close it. None of them is built, even partially.
 | `has_summary_template` | bool | Page contains `{{recipesummary ...}}` (case-insensitive, space or underscore). |
 | `total_minutes` | int or null | Section 2.3. |
 | `diet` | `{"vegetarian": "yes" \| "no" \| "unknown", "vegan": same}` | Section 2.3. |
-| `ingredients` | string[] | Plain-text bullet lines from the section(s) whose title matches `INGREDIENT_HEADINGS`, subsections included; if there is none, the first section before the method with at least 3 bullets. Empty list means unknown. |
+| `ingredients` | string[] | Plain-text lines from the section(s) whose title matches `INGREDIENT_HEADINGS`, subsections included: bullet items, or, when a section has no bullets, the first cell of each data row of its wikitable; if there is no such section, the first section before the method with at least 3 bullets. Empty list means unknown. |
 | `method` | string | Plain text of the section(s) whose title matches `METHOD_HEADINGS`, list markers removed, subsection headings kept as lines. |
 | `summary` | string | Plain text of the lead paragraph(s) before the first heading; may be empty. |
 

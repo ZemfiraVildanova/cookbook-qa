@@ -199,12 +199,45 @@ def _bullets(body: str) -> list[str]:
     return lines
 
 
+def _table_rows(body: str) -> list[str]:
+    """First cell of every data row of wikitables in the body (header rows skipped)."""
+    rows: list[str] = []
+    in_table = False
+    current: list[str] = []
+
+    def flush() -> None:
+        if current:
+            cleaned = clean_wikitext(current[0])
+            if cleaned:
+                rows.append(cleaned)
+        current.clear()
+
+    for raw in body.splitlines():
+        line = raw.strip()
+        if line.startswith("{|"):
+            in_table = True
+            continue
+        if not in_table:
+            continue
+        if line.startswith("|}"):
+            flush()
+            in_table = False
+        elif line.startswith("|-"):
+            flush()
+        elif line.startswith("|+") or line.startswith("!"):
+            continue  # caption or header cell
+        elif line.startswith("|"):
+            current.extend(cell.strip() for cell in line[1:].split("||"))
+    flush()
+    return rows
+
+
 def ingredient_lines(wikitext: str) -> list[str]:
-    """Bullet lines of the ingredients section(s); fallback: first bullet list before the method."""
+    """Ingredient section lines: bullets, else wikitable rows; fallback: first bullet list."""
     _, sections = _sections(wikitext)
     lines: list[str] = []
     for _, body in _collect(sections, INGREDIENT_HEADINGS):
-        lines.extend(_bullets(body))
+        lines.extend(_bullets(body) or _table_rows(body))
     if lines:
         return lines
     for _, title, body in sections:
