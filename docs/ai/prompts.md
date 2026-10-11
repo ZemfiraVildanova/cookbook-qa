@@ -77,3 +77,60 @@ by R-14; add `INGREDIENT_GROUPS`; return the user's word in `applied_constraints
 ```text
 Добавь в INGREDIENT_STOPWORDS слова one, way, time, clue, idea. Старт.
 ```
+
+## Step 4 checkpoint — continue without the settings file
+
+Summary: go on; the author will create `.claude/settings.json` later; behave as if it
+were present (tests before every commit, never read `.env`, no attribution lines).
+
+```text
+Дальше. Файл .claude/settings.json я создам позже; закоммитишь его тогда. До этого работай так, как будто он уже есть: тесты перед каждым коммитом, .env не читать, в сообщениях коммитов никаких Co-Authored-By.
+```
+
+## Step 9 checkpoint — settings, thinking check, latency target
+
+Summary: commit the settings file; at step 13 check whether the model uses extended
+thinking and switch it off or down; a missed latency target goes into README as a miss,
+the target itself does not move; repeat the cut-off remark about the safety answer.
+
+```text
+Файл .claude/settings.json создан, закоммить его. На шаге 13 проверь, не включено ли у модели расширенное размышление и можно ли его отключить или снизить. Если цель по скорости не достигается, запиши это в README как промах, цель не меняй. Повтори целиком своё замечание про safety-ответ — в отчёте оно оборвалось. Затем дальше.
+```
+
+## Between steps 10 and 11 — safety answer scope (became R-36)
+
+Summary: after step 10, before step 11, narrow the safety answer by the spec-change
+procedure (SPEC rule and constant row, then xfail test, then code): keep the retrieved
+recipes whose title shares a significant word with the question, all of them when none
+does; stopwords in a constant; citations only for the shown recipes; G-12 cites the
+expected recipe.
+
+```text
+Не прерывай шаг 10. Когда закончишь его, до шага 11 сделай правку safety-ответа по процедуре spec-change: сначала правило в SPEC и строка в таблице констант, затем тест с xfail, затем код.
+
+Правило сделай простым и детерминированным: из найденных рецептов в safety-ответе остаются те, у которых хотя бы одно значимое слово заголовка встречается в вопросе; если таких нет, показываются все, как сейчас. Список незначимых слов заголовка вынеси в константу. В цитатах остаются только показанные рецепты.
+
+Обнови G-12: в цитатах должен быть ожидаемый рецепт.
+```
+
+## Step 11 checkpoint — a production refusal on an open question (became R-24)
+
+Summary: "What can I cook with my kids?" was refused in production; find who decided
+from the request log; if a filter, that violates E-28 (test first, then code); if the
+model, release a new prompt version with an open-question rule, write it into SPEC and
+rerun the golden set, 15/15 required.
+
+```text
+Вопрос «What can I cook with my kids?» на проде вернул out_of_corpus. Посмотри по логу запроса, кто принял решение.
+
+Если фильтр (applied_constraints не пуст или модель не вызывалась) — это нарушение E-28, исправь: сначала тест, потом код.
+
+Если модель — выпусти новую версию промпта с правилом: на открытый вопрос без названия блюда («что приготовить с детьми», «что-нибудь на ужин») предлагать подходящие рецепты из найденных, а не отказывать; out_of_corpus оставить для случаев, когда спрашивают конкретное блюдо или условие, которого в рецептах нет. Запиши правило в SPEC и прогони golden set, 15/15 обязательно.
+```
+
+Follow-up check by the author, answered from the files rather than from memory:
+
+```text
+Кейс «известное блюдо, которого нет в корпусе → out_of_corpus» остался в наборе без изменений?
+Результат 15/15 получен именно с отключённым размышлением и против прода?
+```
