@@ -1,0 +1,54 @@
+__NOTOC__
+{{recipesummary|category=Pasta recipes|servings=6|time=1 hour|difficulty=2|Image = [[Image:Spaghetti alla Carbonara (Madrid).JPG|300px]]}}
+{{recipe}} | [[Cookbook:Pasta Recipes|Pasta]] | [[cookbook:Cuisine of Italy|Cuisine of Italy]]
+
+'''''Spaghetti alla carbonara''''' (literally "charcoal burners' spaghetti" in Italian) is an Italian pasta dish made with eggs, pecorino romano, guanciale and [[Cookbook:Pepper|black pepper]]. It was created in the middle of the 20th century.<ref name="Alberini">{{cite book |first1=Massimo |last1=Alberini |first2=Giorgio |last2=Mistretta |title=Guida all'Italia gastronomica |publisher=Touring Club Italiano |date=1984 |page=286}}</ref> Like most recipes, the origins of the dish are obscure but there are many legends. As 'carbonara' literally means 'coal miner's wife', some believe that the dish was first made as a hearty meal for Italian coal miners. Others say that it was originally made over charcoal grills, or that it was made with squid ink, giving it the color of coal. It has even been suggested that it was created by, or as a tribute to, the "charcoalmen", a secret society prominent in the unification of Italy. Also, the name may be from a Roman restaurant named ''Carbonara.''<ref name="mariani">{{cite book |last1=Mariani |first1=Galina |url=http://books.google.com/books?id=Mz5tt-4yHIQC&pg=PA140 |title=The Italian-American cookbook: a feast of food from a great American cooking tradition |date=2000 |publisher=Harvard Common |isbn=9781558321663 |location= |pages=140-41 |doi= |id= |first2=Galina |last2=Mariani |first3=Laura |last3=Tedeschi}}</ref><ref>{{cite book |last=Davidson |first=Alan |url= |title=Oxford Companion to Food |date=1999 |publisher=Oxford UP |isbn=0-19-211579-0 |location=Oxford |page=740 |doi= |id= }}</ref>
+
+Recipes vary, though all agree that pecorino romano, eggs, cured fatty pork, and black pepper are the basics. The pork is fried in fat ([[Cookbook:Olive Oil|olive oil]] or lard). Then, a mixture of eggs, cheese and olive oil is combined with the hot pasta, thereby cooking the eggs. All of the ingredients are then mixed together.<ref name="Alberini" /><ref>{{cite book |last=Gossetti Della Salda |first=Anna |title=Le ricette regionali italiane |publisher=Solares |location=Milan |date=1965}}</ref><ref>Accademia Italiana della Cucina, ''Ricettario nazionale delle cucine regionali italiane''</ref> Guanciale is the most traditional cured pork cut for this recipe, but pancetta is a popular substitute.<ref>Luigi Carnacina, Luigi Veronelli, ''La cucina rustica regionale'' (2. Italia Centrale), Rizzoli, 1977 republication of ''La Buona Vera Cucina Italiana'', 1966.</ref><ref>Vincenzo Buonassisi, ''Il Nuovo Codice della Pasta'', Rizzoli, 1985.</ref> In the US, it is often made with American bacon.
+
+Cream is not common in traditional Italian recipes, but is common in carbonara recipes from other countries such as the United States,<ref>{{cite web |last1=Herbst |first1=Sharone Tyler|author-link=w:Sharon Tyler Herbst |first2=Ron |last2=Herbst |work=The New [[wikipedia:Food Lover's Companion|Food Lover's Companion]], Fourth Edition |publisher=Barron's Educational Series. {{ISBN|0-7641-3577-5}} |url=http://www.answers.com/topic/alla-carbonara |title=alla Carbonara |date=2007}}</ref><ref name="OnCooking">{{cite book |last1=Labensky |first1=Sarah R. |first2=Alan M. |last2=House |title=On Cooking, Third Edition: Techniques from expert chefs |publisher=Pearson Education, Inc. |year=2003 |isbn=0-1304-5241-6}}</ref> France, the United Kingdom,<ref>{{cite book |last=Wright |first=Jeni |title=Italy's 500 Best-Ever Recipes |publisher=Hermes House, Anness Publishing |location=London |year=2006–2007 |isbn=0-681-46033-4}}</ref> Australia,<ref>{{cite web |url=http://au.food.yahoo.com/recipes/recipe/-/5348809/fettucine-carbonara/ |title=Fettucine Carbonara |work=[[wikipedia:Better Homes and Gardens (TV series)|Better Homes and Gardens]] |publisher=Yahoo!7 Food}}</ref> and Russia (especially Moscow). Italian Chef Luigi Carnacina, however, used cream in his recipe.<ref>Carnacina, Luigi; Vincenzo Buonassisi (1975). Roma in Cucina. Milan: Giunti Martello. p. 91.</ref> Other Anglo/Franco variations on carbonara may include peas, broccoli or other vegetables added for colour.<ref name="OnCooking"/> Yet another American version includes [[Cookbook:Mushroom|mushrooms]]. Many of these preparations have more sauce than the Italian versions.<ref>{{cite book|last1=Perry |first1=Neil |author-link=w:Neil Perry |first2=Earl |last2=Carter |first3=Sue |last3=Fairlie-Cuninghame |title=The Food I Love: Beautiful, Simple Food to Cook at Home |publisher=Simon and Schuster |date=2006 |location= |page=114 |url=http://books.google.com/books?id=f9--loJsVdUC&pg=PA114 |doi= |id= |isbn=9780743292450}}</ref> In all versions of the recipe, raw eggs are added to the sauce and cook with the heat of the pasta.
+
+==Ingredients==
+*450 [[Cookbook:Gram|g]] (1 [[Cookbook:Pound|pound]]) [[Cookbook:Pasta|spaghetti]]
+*225–500 g (½–1 pound) guanciale or [[Cookbook:Pancetta|pancetta]]
+*5 [[Cookbook:Egg yolk|egg yolks]]
+*178 [[Cookbook:Milliliter|ml]] (¾ [[Cookbook:Cup|cup]]) grated [[Cookbook:Pecorino Romano Cheese|Pecorino Romano]] cheese
+*178 ml (¾ cup) grated [[Cookbook:Parmesan Cheese|Parmigiano-Reggiano]] cheese
+*3–4 [[Cookbook:Tablespoon|tablespoons]] extra-virgin [[Cookbook:Olive Oil|olive oil]]
+*½ tablespoon freshly-ground [[Cookbook:Pepper|pepper]]
+*[[Cookbook:Salt|Salt]]
+
+==Equipment==
+*Large [[Cookbook:Pots and Pans|pot]]
+*Large [[Cookbook:Frying Pan|skillet]]
+*Bowl
+*Measuring cups and spoons
+*Fork
+
+== Procedure ==
+#[[Cookbook:Dice|Dice]] the guanciale or pancetta into 2.5 [[Cookbook:Centimetre (cm)|cm]] (1-[[Cookbook:Inch|inch]]) pieces.
+#Bring a big pot of water to a [[Cookbook:Boiling|boil]] and add salt to taste when it begins to [[Cookbook:Simmering|simmer]].
+#Cook the spaghetti until it is [[Cookbook:Al Dente|al dente]] and drain it, reserving 1 cup of water.
+#While spaghetti is cooking, heat the olive oil in a large [[Cookbook:Skillet|skillet]] over a medium-high heat. When the oil is hot, add the pancetta and cook for about 10 minutes over a low flame until the pancetta has [[Cookbook:Rendering|rendered]] most of its fat but is still chewy and barely browned.
+#In a bowl, slowly [[Cookbook:Whisk|whisk]] about ½ cup of the pasta water into the egg yolks. Add the grated cheese and mix thoroughly with a fork.
+#Strain the spaghetti and transfer it immediately to the skillet with the pancetta. [[Cookbook:Mixing#Tossing|Toss]] it and turn off the heat.
+#Add the egg and cheese mixture to the pasta while stirring in the remaining pasta water to help thin the sauce and create an emulsion.
+#Add the pepper and toss all the ingredients to coat the pasta.
+==Notes, tips, and variations==
+
+* Ideally this dish is served with a red [[Cookbook:Wine|wine]] (Merlot, Chianti, Montepulciano d’Abruzzo), allowed to decant for several hours, and served at 65°F (18°C).
+
+==See also==
+*[[Cookbook:Carbonara Pasta|Carbonara pasta]]
+
+==References==
+{{reflist}}
+[[Category:Italian recipes]]
+[[Category:Recipes using pasta and noodles]]
+[[Category:Recipes using bacon]]
+[[Category:Recipes using egg yolk]]
+[[Category:Recipes using pecorino]]
+[[Category:Recipes with metric units]]
+[[Category:Recipes using pasta and noodles]]
+[[Category:Featured recipes]]
+[[Category:Recipes using parmesan]]

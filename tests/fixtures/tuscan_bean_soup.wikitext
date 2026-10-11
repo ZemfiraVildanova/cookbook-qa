@@ -1,0 +1,61 @@
+{{recipesummary|category=Bean recipes|servings=4–6|time=Soak: overnight<br/>Prep: 15–20 minutes<br/>Cooking time: 1½ hours|difficulty=2
+}}
+{{recipe}} | [[Cookbook:Cuisine of Italy|Italian cuisine]] | [[Cookbook:Legumes|Beans]] | [[Cookbook:Soups|Soups]]
+
+==Ingredients==
+
+* 3 [[Cookbook:Cup|cups]] cranberry or pinto beans
+* 1 cup [[Cookbook:Spelt|spelt]] or [[Cookbook:Wheat|wheat berries]] (available at gourmet-food shops)
+* ¼ cup extra-virgin [[Cookbook:Olive Oil|olive oil]], plus more for drizzling
+* ½ [[Cookbook:Pound|pound]] sweet Italian [[Cookbook:Sausage|sausage]], casings removed
+* 1 pound [[Cookbook:Kale|kale]], preferably Tuscan, coarse stems removed, cut into thick ribbons
+* 1 medium-large [[Cookbook:Onion|onion]], [[Cookbook:Dice|diced]]
+* 1 large [[Cookbook:Carrot|carrot]], peeled and diced
+* 1 large rib [[Cookbook:Celery|celery]], trimmed and diced
+* 3 [[Cookbook:Garlic|cloves garlic]], thinly [[Cookbook:Slicing|sliced]]
+* 5 cups homemade [[Cookbook:Chicken|chicken]] [[Cookbook:Stock|stock]], or canned low-sodium stock, plus more if needed
+* 1 cup peeled, seeded, and diced [[Cookbook:Tomato|tomatoes]], or drained canned diced tomatoes
+* 1 sprig fresh [[Cookbook:Rosemary|rosemary]]
+* 1 sprig fresh [[Cookbook:Sage|sage]]
+* [[Cookbook:Salt|Sea salt]] and freshly ground [[Cookbook:Pepper|pepper]]
+* ½ cup freshly grated [[Cookbook:Cheese|Parmigiano-Reggiano cheese]]
+
+==Procedure==
+
+# [[Cookbook:Soaking Beans|Soak]] beans and spelt overnight in separate bowls of cold water.
+# Drain and set aside.
+# Heat olive oil in a large pot over medium-high heat.
+# Add sausage.
+# Cook stirring occasionally, until meat begins to separate and brown (3–5 minutes).
+# Stir in kale, onion, carrot, celery, and garlic.
+# Cook until softened (about 10 minutes).
+# Add beans, spelt, chicken stock, and tomatoes.
+# Bring to [[Cookbook:Boiling|boil]].
+# Stir in rosemary and sage.
+# Reduce heat.
+# [[Cookbook:Simmering|Simmer]] mixture for 60–70 minutes, until beans are tender; if soup is too thick, add chicken stock.
+# Season to taste with salt and pepper.
+# [[Cookbook:Ladle|Ladle]] soup into bowls.
+# Drizzle with olive oil, and sprinkle on cheese.
+# Serve immediately.
+
+==Notes, tips, and variations==
+
+* Have this soup first with bread, like [[Cookbook:Ciabatta|ciabatta]], then finish with some cold cuts, like [[Cookbook:Salami|salami]] and [[Cookbook:Prosciutto|prosciutto]].
+* Instead of using spelt, you can substitute [[Cookbook:Barley|barley]].
+* If you can't find Tuscan kale, you can use regular kale, [[Cookbook:Mustard Greens|mustard greens]], or [[Cookbook:Swiss Chard|Swiss chard]].
+* This soup tastes even better the next day.
+
+[[Category:Inexpensive recipes]]
+[[Category:Italian recipes]]
+[[Category:Soup recipes]]
+[[Category:Recipes using pinto bean]]
+[[Category:Recipes using carrot]]
+[[Category:Recipes using celery]]
+[[Category:Recipes using onion]]
+[[Category:Recipes using sausage]]
+[[Category:Recipes using tomato]]
+[[Category:Recipes using parmesan]]
+[[Category:Recipes using cargamanto bean]]
+[[Category:Recipes using chicken broth and stock]]
+[[Category:Recipes using kale]]

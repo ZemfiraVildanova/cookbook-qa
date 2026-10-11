@@ -1,0 +1,40 @@
+{{Recipe summary
+| Category = Pasta recipes
+| Difficulty = 2
+}}
+
+{{recipe}} | [[Cookbook:Vegan cuisine|Vegan cuisine]] | [[Cookbook:Pasta Recipes|Pasta Recipes]]
+
+'''Macaroni and nutritional yeast''' is a vegan alternative to macaroni and cheese.
+
+==Ingredients==
+*1 [[Cookbook:Pound|pound]] dry [[Cookbook:Pasta|macaroni pasta]]
+*½ [[Cookbook:Cup|cup]] [[Cookbook:Margarine|margarine]]
+*½ cup [[Cookbook:Flour|flour]]
+*1 cup [[Cookbook:Nutritional Yeast Flakes|nutritional yeast flakes]]
+*3 ½ cups water or [[Cookbook:Rice Milk|rice milk]], boiling
+*1 ½ [[Cookbook:Teaspoon|tsp]] [[Cookbook:Salt|salt]]
+*1 ½ tsp [[Cookbook:Garlic Powder|garlic powder]]
+*1 [[Cookbook:Pinch|pinch]] of [[Cookbook:Turmeric|turmeric]]
+*2 [[Cookbook:Tablespoon|Tbsp]] [[Cookbook:Soy sauce|soy sauce]]
+
+==Procedure==
+#Bring 4 [[Cookbook:Quart|quarts]] of water to a [[Cookbook:Boiling|boil]], add salt to taste, and add the macaroni.
+#Melt the margarine over low heat. [[Cookbook:Beating|Beat]] in flour with a wire whisk. Continue to beat over medium heat until mixture is smooth and bubbly.
+#Whisk in the 3 ½ cups water. Then, add salt, garlic powder, soy sauce, and turmeric to the liquid.
+#The sauce should cook until it thickens and bubbles. When that happens, beat in nutritional yeast flakes; if the sauce is too thick, add more water.
+#When the macaroni is cooked, drain and add the sauce. Serve immediately.
+
+== Notes, tips, and variations ==
+
+* For a variation, add mustard to the sauce.
+
+[[Category:Vegan recipes|{{PAGENAME}}]]
+[[Category:Recipes using pasta and noodles]]
+[[Category:Recipes using nutritional yeast|{{PAGENAME}}]]
+[[Category:Boiled recipes]]
+[[Category:Side dish recipes]]
+[[Category:Recipes for macaroni and cheese]]
+[[Category:Recipes using wheat flour]]
+[[Category:Recipes using garlic powder]]
+[[Category:Recipes using margarine]]
