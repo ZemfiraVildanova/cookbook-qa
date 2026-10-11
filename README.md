@@ -91,7 +91,7 @@ be rebuilt in the same commit or the service will not start.
 
 | Layer | Command | What it proves |
 |---|---|---|
-| Unit (186 tests, no network, fake embedder and fake model) | `uv run pytest` | parser, filters, retrieval, safety gate, every `/ask` branch, contract and invariants |
+| Unit (187 tests, no network, fake embedder and fake model) | `uv run pytest` | parser, filters, retrieval, safety gate, every `/ask` branch, contract and invariants |
 | Lint and types | `uv run ruff check . && uv run ruff format --check . && uv run mypy src` | |
 | Retrieval quality | `uv run python evals/retrieval_eval.py` | hit@1, hit@4, MRR per mode on 45 queries (ADR-001) |
 | Golden set, 15 cases + 3 probes | `uv run python evals/run_evals.py --target http://localhost:8000 --runs 1` | schema and invariants on every response, then the case assertions; JSON report in `evals/reports/` |
@@ -110,13 +110,15 @@ refusals, 9 probes). Prices from the vendor pages on the same day
 | Metric | Target (SPEC 9) | Measured | |
 |---|---|---|---|
 | Answers that call the model, p50 / p95 | ≤ 3.0 s / ≤ 6.0 s | **2.20 s / 2.82 s** | met |
-| Pre-model refusals (safety, filtered out) | ≤ 500 ms | 242–249 ms | met |
+| Pre-model refusals (safety, filtered out) | ≤ 500 ms | 202–258 ms (nine responses) | met |
+| Cold start, container start → `/health` 200 | ≤ 5 s | 1.94 s, local `docker run` of the step-15 image; CI logs the same measurement per build | met |
 | Cost per 1,000 questions, golden mix | ≤ $1.00 | **$0.37** ($0.00037 per question) | met |
 | Correctness | 15/15 on 3 consecutive runs, 3/3 probes | 15/15, 0 flaky, 3/3 | met |
 
-What one question costs: about 3,400 input tokens (system prompt plus four recipes) and
-200–350 output tokens on `claude-haiku-5-5` at $0.10 / $0.50 per million, plus about 16
-embedding tokens at $0.02 per million (below a thousandth of a cent). Refusals decided
+What one question costs: 3,300–4,500 input tokens (system prompt plus four recipes, mean
+about 3,800) and 120–380 output tokens on `claude-haiku-5-5` at $0.10 / $0.50 per million,
+plus about 16 embedding tokens at $0.02 per million (712 tokens for the 45 retrieval-eval
+queries, `evals/reports/retrieval-20261011T115036Z.json`; below a thousandth of a cent). Refusals decided
 before the model cost nothing.
 
 Models and why: generation on **`claude-haiku-5-5`** with extended thinking switched off
@@ -134,8 +136,10 @@ three runs after one prompt revision (stronger); p95 exceeds 6 s or cost exceeds
 1,000 after prompt-size cuts (other candidate); the vendors' relative prices change by
 more than 2×.
 
-Current bottleneck: the generation call itself, about 2 s of the 2.2 s median; retrieval
-and the embedding call take under 250 ms together. Next optimization, in order: prompt
+Current bottleneck: the generation call. The server's per-stage timers in a local run of
+the golden set (12 model answers, 2026-10-11, medians) read: embedding 249 ms, retrieval
+including the embedding 250 ms, generation 2.30 s, total 2.70 s; in production the
+end-to-end median is 2.20 s. Next optimization, in order: prompt
 caching of the fixed system prompt, a smaller recipe rendering (`PROMPT_RECIPE_MAX_CHARS`),
 and streaming the answer to the UI, none of which changes the contract.
 
@@ -159,7 +163,9 @@ and streaming the answer to the UI, none of which changes the contract.
   `out_of_domain`, `safety` without a model call). The same smoke runs daily at 06:17
   UTC and on demand (`smoke_only` dispatch input). Deploys are serialised by a
   concurrency group; re-running the workflow for the same commit reapplies the same
-  template with the same image and changes nothing. Rollback: dispatch the workflow with
+  template with the same image and changes nothing (checked at step 15: dispatch run
+  38138037003 re-applied the template for image `5f9a479`, `/health` showed the same
+  `git_sha` before and after, the smoke passed). Rollback: dispatch the workflow with
   a previous `image_tag`, or revert the commit.
 - **Secrets**: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `NORTHFLANK_API_TOKEN` live in
   GitHub Actions secrets; the first two are written into a Northflank secret group by the
@@ -227,8 +233,8 @@ First commit 10:16, Europe/Moscow, 2026-10-11. Times are commit times from `git 
 | 11 golden set, harness, prompt v2, audit fixes | 13:40 | checkpoint; then prompt v3 and thinking off by 14:13 |
 | 12 CI gate, smoke, schedule | 14:48 | |
 | 13 OpenAI adapter, bake-off, retrieval numbers | 15:00 | three runs per model, 45-query retrieval set |
-| 14 README, ADRs | | |
-| 15 final verification | | |
+| 14 README, ADRs | 15:00 | |
+| 15 final verification | 15:25 | fresh clone + image + golden 15/15, gitleaks clean, redeploy idempotent, two audits, static-route and prompt fixes |
 
 ## Licence
 
