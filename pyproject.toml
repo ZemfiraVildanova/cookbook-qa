@@ -13,6 +13,7 @@ dependencies = [
     "rank-bm25",
     "httpx",
     "pyyaml>=6.0.3",
+    "anthropic>=1.13.0",
 ]
 
 [dependency-groups]
