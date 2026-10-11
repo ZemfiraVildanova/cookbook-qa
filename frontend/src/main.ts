@@ -46,9 +46,11 @@ function renderLoading(): void {
 
 function renderError(status: number, body: unknown, requestId: string | null): void {
   const card = el("div", "card");
-  card.append(el("span", "status error", `Error ${status}`));
+  card.append(el("span", "status error", status === 0 ? "Network error" : `Error ${status}`));
   let message = "The service could not answer right now. Please try again.";
-  if (status === 422) {
+  if (status === 0) {
+    message = "Could not reach the service. Check your connection and try again.";
+  } else if (status === 422) {
     message = "The question must be between 1 and 500 characters.";
   } else if (isErrorResponse(body)) {
     message = body.error.message;
@@ -137,8 +139,8 @@ form.addEventListener("submit", async (event) => {
     } else {
       renderError(response.status, body, requestId);
     }
-  } catch (error: unknown) {
-    renderError(0, { error: { code: "network", message: String(error), request_id: "" } }, null);
+  } catch {
+    renderError(0, null, null); // network failure: fixed text, no request id (SPEC 3.7)
   } finally {
     submit.disabled = false;
   }

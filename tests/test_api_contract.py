@@ -86,6 +86,7 @@ def test_question_at_max_length_is_accepted(client: TestClient) -> None:
 def test_unknown_route_is_404(client: TestClient) -> None:
     """SPEC 3.1: no other routes exist."""
     assert client.get("/nope").status_code == 404
+    assert client.get("/redoc").status_code == 404
     assert client.get("/ask").status_code == 405
 
 

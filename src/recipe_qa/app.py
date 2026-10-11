@@ -87,6 +87,7 @@ def create_app(settings: Settings | None = None, deps: Deps | None = None) -> Fa
         version="0.1.0",
         description="Answers questions from a fixed Wikibooks Cookbook corpus. Contract: SPEC.md.",
         lifespan=lifespan,
+        redoc_url=None,  # SPEC 3.1: only /openapi.json and /docs exist
     )
 
     @app.middleware("http")

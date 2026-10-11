@@ -15,7 +15,7 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
-from recipe_qa.config import LLM_MAX_RETRIES
+from recipe_qa.config import LLM_MAX_RETRIES, LLM_RETRY_BACKOFF_S
 
 
 class LLMStatus(StrEnum):
@@ -29,6 +29,7 @@ class LLMError(RuntimeError):
     """Base class; `code` is what the 503 body carries (SPEC 3.4)."""
 
     code = "llm_error"
+    attempts = 0  # set by with_retry when every attempt failed, for the log line (R-70)
 
 
 class LLMUnavailableError(LLMError):
@@ -100,7 +101,10 @@ class LLMClient(Protocol):
 
 
 def with_retry[T](
-    attempt: Callable[[], T], *, retries: int = LLM_MAX_RETRIES, backoff_s: float = 0.5
+    attempt: Callable[[], T],
+    *,
+    retries: int = LLM_MAX_RETRIES,
+    backoff_s: float = LLM_RETRY_BACKOFF_S,
 ) -> tuple[T, int]:
     """Run `attempt` up to retries + 1 times on LLMError; returns (result, attempts)."""
     last: LLMError | None = None
@@ -112,4 +116,5 @@ def with_retry[T](
             if n <= retries:
                 time.sleep(backoff_s)
     assert last is not None
+    last.attempts = retries + 1
     raise last

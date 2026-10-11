@@ -26,7 +26,12 @@ import httpx
 import yaml
 from pydantic import ValidationError
 
-from recipe_qa.config import EMBEDDING_MODEL, QUESTION_MAX_CHARS
+from recipe_qa.config import (
+    EMBEDDING_MODEL,
+    QUESTION_MAX_CHARS,
+    REFUSAL_TEMPLATES,
+    SAFETY_DISCLAIMER,
+)
 from recipe_qa.constraints import recipe_passes
 from recipe_qa.corpus import Corpus, Recipe, load_corpus
 from recipe_qa.schemas import AppliedConstraints, AskResponse
@@ -72,7 +77,7 @@ def percentile(values: list[float], p: float) -> float | None:
 
 
 def invariant_failures(resp: AskResponse, by_id: dict[str, Recipe]) -> list[str]:
-    """I-05, I-07 and I-08 (I-01..I-04 and I-08 are also enforced by AskResponse itself)."""
+    """I-05, I-07, I-08 and R-23 (I-01..I-04 and I-08 are also enforced by AskResponse itself)."""
     failures: list[str] = []
     ids = [c.recipe_id for c in resp.citations]
     if len(set(ids)) != len(ids):
@@ -86,6 +91,15 @@ def invariant_failures(resp: AskResponse, by_id: dict[str, Recipe]) -> list[str]
             failures.append(f"I-05: title/url differ from corpus for {c.recipe_id}")
         if not resp.refused and not recipe_passes(recipe, resp.applied_constraints):
             failures.append(f"I-07: {c.recipe_id} violates applied_constraints")
+    if resp.refused and resp.refusal_reason is not None:  # R-23
+        reason = resp.refusal_reason.value
+        template_ok = (
+            (resp.answer or "").startswith(SAFETY_DISCLAIMER)
+            if reason == "safety"
+            else resp.answer == REFUSAL_TEMPLATES[reason]
+        )
+        if not template_ok:
+            failures.append(f"R-23: refusal text is not the {reason} template")
     no_model = resp.meta.model is None
     usage_zero = resp.meta.usage.input_tokens == 0 and resp.meta.usage.output_tokens == 0
     if no_model != (resp.meta.prompt_version is None) or no_model != usage_zero:

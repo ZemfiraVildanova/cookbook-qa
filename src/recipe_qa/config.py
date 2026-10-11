@@ -30,6 +30,8 @@ EMBEDDING_MODEL: Final = "text-embedding-3-small"
 EMBEDDING_DIM: Final = 1536
 EMBED_DOC_MAX_CHARS: Final = 8000
 EMBED_TIMEOUT_S: Final = 5.0
+EMBED_BATCH: Final = 32  # texts per embeddings request when building the index (2.4)
+OPENAI_API_BASE: Final = "https://api.openai.com/v1"  # embeddings endpoint base URL
 SIMILARITY_FLOOR: Final[float | None] = None  # disabled unless a tuning set shows a margin (R-21)
 
 # --- Constraint parser (SPEC 5.2) -------------------------------------------------------
@@ -316,8 +318,10 @@ LLM_TEMPERATURE: Final = 0.0
 LLM_MAX_OUTPUT_TOKENS: Final = 1000
 LLM_TIMEOUT_S: Final = 15.0
 LLM_MAX_RETRIES: Final = 1
+LLM_RETRY_BACKOFF_S: Final = 0.5  # pause before the single retry (R-50, R-61)
 PROMPT_VERSION: Final = "answer.v2"
 PROMPT_RECIPE_MAX_CHARS: Final = 3000
+LOG_TOP_RANKED: Final = 10  # fused candidates kept in the request log line (R-70)
 
 # --- Serving (SPEC 3.1) -----------------------------------------------------------------
 STATIC_DIR: Final = Path("static")  # built UI; a placeholder page is served when absent

@@ -22,10 +22,12 @@ from recipe_qa.config import (
     BM25_K1,
     BM25_TITLE_BOOST,
     BM25_TOKEN_PATTERN,
+    EMBED_BATCH,
     EMBED_DOC_MAX_CHARS,
     EMBED_TIMEOUT_S,
     EMBEDDING_DIM,
     EMBEDDING_MODEL,
+    OPENAI_API_BASE,
     RRF_K,
     TOP_K,
 )
@@ -34,7 +36,6 @@ from recipe_qa.corpus import Corpus, Recipe
 from recipe_qa.schemas import AppliedConstraints, RetrievalMode
 
 log = logging.getLogger(__name__)
-EMBED_BATCH = 32
 
 
 class Embedder(Protocol):
@@ -231,7 +232,7 @@ class OpenAIEmbedder:
         api_key: str,
         *,
         timeout: float = EMBED_TIMEOUT_S,
-        base_url: str = "https://api.openai.com/v1",
+        base_url: str = OPENAI_API_BASE,
     ) -> None:
         self._client = httpx.Client(
             base_url=base_url, headers={"Authorization": f"Bearer {api_key}"}, timeout=timeout

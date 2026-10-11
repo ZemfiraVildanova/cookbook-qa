@@ -12,7 +12,7 @@ from typing import Any
 import numpy as np
 
 from recipe_qa import request_log
-from recipe_qa.config import PROMPT_VERSION, REFUSAL_TEMPLATES
+from recipe_qa.config import LOG_TOP_RANKED, PROMPT_VERSION, REFUSAL_TEMPLATES
 from recipe_qa.constraints import IngredientIndex, parse_constraints
 from recipe_qa.corpus import Corpus, Recipe
 from recipe_qa.llm import LLMClient, LLMError, LLMResult, LLMStatus, LLMUnavailableError
@@ -28,8 +28,6 @@ from recipe_qa.schemas import (
     RetrievalMode,
     Usage,
 )
-
-TOP_RANKED_LOGGED = 10  # fused candidates kept in the log line for "why not X" questions
 
 
 @dataclass
@@ -84,6 +82,7 @@ class _Trace:
         default_factory=lambda: {"parse": 0, "embed": 0, "retrieve": 0, "llm": 0, "total": 0}
     )
     http_status: int = 200
+    started: float = field(default_factory=time.perf_counter)
 
 
 def _ms(started: float) -> int:
@@ -107,7 +106,6 @@ class Pipeline:
 
     def ask(self, question: str, request_id: str) -> AskResponse:
         """SPEC 4 steps 2 to 8. Raises LLMError (→ 503) or any unexpected error (→ 500)."""
-        started = time.perf_counter()
         trace = _Trace(request_id=request_id, question=question)
         try:
             response = self._run(question, trace)
@@ -122,12 +120,13 @@ class Pipeline:
         except LLMError as exc:
             trace.http_status = 503
             trace.llm["status"] = exc.code
+            trace.llm["attempts"] = exc.attempts
             raise
         except Exception:
             trace.http_status = 500
             raise
         finally:
-            trace.latency_ms["total"] = _ms(started)
+            trace.latency_ms["total"] = _ms(trace.started)
             self._log(trace)
 
     # --- stages --------------------------------------------------------------------------------
@@ -211,7 +210,7 @@ class Pipeline:
             prompt_version=PROMPT_VERSION if llm else None,
             corpus_version=self.deps.corpus.corpus_version,
             retrieval_mode=mode,
-            latency_ms=_ms_total(trace),
+            latency_ms=_ms(trace.started),  # wall time from pipeline entry (3.3)
             usage=Usage(
                 input_tokens=llm.input_tokens if llm else 0,
                 output_tokens=llm.output_tokens if llm else 0,
@@ -286,7 +285,7 @@ class Pipeline:
                 "retrieved": [candidate(rid) for rid in retrieved_ids],
                 "top_ranked": [
                     candidate(c.id)
-                    for c in (retrieval.ranked[:TOP_RANKED_LOGGED] if retrieval else [])
+                    for c in (retrieval.ranked[:LOG_TOP_RANKED] if retrieval else [])
                 ],
                 "filtered_out": retrieval.filtered_out if retrieval else None,
                 "llm": trace.llm,
@@ -294,8 +293,3 @@ class Pipeline:
                 "latency_ms": trace.latency_ms,
             }
         )
-
-
-def _ms_total(trace: _Trace) -> int:
-    """Latency so far; the final total goes to the log line, the response gets the same value."""
-    return sum(v for k, v in trace.latency_ms.items() if k != "total")
