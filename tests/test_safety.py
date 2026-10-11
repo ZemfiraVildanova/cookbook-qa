@@ -81,3 +81,37 @@ def test_safety_answer_never_asserts_absence() -> None:
     body = text.replace(SAFETY_DISCLAIMER.lower(), "")
     for phrase in ("is nut-free", "is safe", "does not contain", "contains no", "free of"):
         assert phrase not in body
+
+
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
+def test_safety_scope_keeps_titled_recipes() -> None:
+    """R-36, E-33: only the retrieved recipes whose title shares a word with the question."""
+    carbonara = make_recipe("spaghetti-alla-carbonara", "Spaghetti alla Carbonara")
+    pesto1 = make_recipe("pesto-i", "Pesto I")
+    pesto2 = make_recipe("pesto-ii", "Pesto II")
+    mac = make_recipe("macaroni-and-cheese-vegan", "Macaroni and Cheese (Vegan)")
+    retrieved = [pesto1, carbonara, pesto2, mac]
+    assert safety.safety_scope("Is the carbonara nut-free?", retrieved) == [carbonara]
+    # plural tolerance (R-14 singularisation) and retrieval order kept
+    assert safety.safety_scope("Are the pestos safe for toddlers?", retrieved) == [pesto1, pesto2]
+    # case-insensitive, words inside parentheses count
+    assert safety.safety_scope("Is the VEGAN one dairy-free?", retrieved) == [mac]
+    # a title stopword shared with the question ("the", "and", "I") does not count
+    assert safety.safety_scope("Is this nut-free? I need to know", retrieved) == retrieved
+
+
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
+def test_safety_scope_falls_back_to_all() -> None:
+    """R-36, E-34: no shared title word means every retrieved recipe, in order; [] stays []."""
+    recipes = [make_recipe("pesto-i", "Pesto I"), make_recipe("gazpacho", "Gazpacho")]
+    assert safety.safety_scope("Is this nut-free?", recipes) == recipes
+    assert safety.safety_scope("Is the gazpacho safe when pregnant?", recipes) == recipes[1:]
+    assert safety.safety_scope("Is this nut-free?", []) == []
+
+
+def test_title_stopwords_are_plain_tokens() -> None:
+    """Section 8: TITLE_STOPWORDS are lower-case BM25 tokens, so they can match title tokens."""
+    from recipe_qa.config import BM25_TOKEN_PATTERN, TITLE_STOPWORDS
+
+    for word in TITLE_STOPWORDS:
+        assert BM25_TOKEN_PATTERN.fullmatch(word), word

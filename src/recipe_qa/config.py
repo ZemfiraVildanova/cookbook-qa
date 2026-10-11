@@ -188,6 +188,35 @@ SAFETY_PATTERNS: Final[dict[str, re.Pattern[str]]] = {
     "poisoning": re.compile(r"\bfood poisoning\b|\bsalmonella\b|\blisteria\b", re.IGNORECASE),
     "raw_egg": re.compile(r"\braw eggs?\b.*\b(?:safe|risk|ok|okay)\b", re.IGNORECASE),
 }
+# Title words that never count as shared with the question (R-36): articles, connectors,
+# variant numerals. Compared on BM25 tokens before singularisation.
+TITLE_STOPWORDS: Final = frozenset(
+    {
+        "a",
+        "an",
+        "and",
+        "the",
+        "of",
+        "with",
+        "in",
+        "for",
+        "or",
+        "alla",
+        "e",
+        "al",
+        "di",
+        "la",
+        "basic",
+        "recipe",
+        "style",
+        "i",
+        "ii",
+        "iii",
+        "iv",
+        "v",
+        "vi",
+    }
+)
 
 # --- Diet metadata at ingest (SPEC 2.3) -------------------------------------------------
 VEGETARIAN_VETO_TERMS: Final = (

@@ -83,6 +83,21 @@ def test_safety_gate_refuses_before_model() -> None:
     assert llm.calls == 0
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
+def test_safety_citations_are_shown_recipes_only() -> None:
+    """R-36, E-33/E-34: the safety answer and citations cover the recipes named in the question."""
+    client, _ = make_client(FakeLLM())
+    _, body = ask(client, "Is the carbonara nut-free?")
+    resp = AskResponse.model_validate(body)
+    assert resp.refusal_reason is RefusalReason.SAFETY
+    assert [c.recipe_id for c in resp.citations] == ["spaghetti-alla-carbonara"]
+    assert resp.answer is not None and "Pesto" not in resp.answer
+    # E-34: a question that names no recipe still lists every retrieved recipe
+    _, body = ask(client, "Is this nut-free?")
+    resp = AskResponse.model_validate(body)
+    assert resp.refusal_reason is RefusalReason.SAFETY and len(resp.citations) > 1
+
+
 def test_safety_with_no_candidates_is_disclaimer_only() -> None:
     """R-35: safety wins over out_of_corpus; no citations when filters leave nothing."""
     client, _ = make_client(FakeLLM())
