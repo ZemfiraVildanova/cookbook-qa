@@ -652,8 +652,8 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `TIME_TOTAL_LABELS` | total, time, total time, ready in | | 2.3: a single labelled time part with one of these labels is the total; any other single label is partial |
 | `LLM_PROVIDER` | `anthropic` | `LLM_PROVIDER` | `anthropic` or `openai` |
 | `LLM_MODEL` | `claude-haiku-5-5` | `LLM_MODEL` | Generation model id |
-| `LLM_TEMPERATURE` | 0 | | R-50 |
-| `LLM_MAX_OUTPUT_TOKENS` | 600 | | Output cap, also a spend cap |
+| `LLM_TEMPERATURE` | 0 | | R-50; sent only to providers that accept sampling parameters. Anthropic's current models reject them, so the Anthropic adapter omits it and relies on structured output plus the three-run pass rule |
+| `LLM_MAX_OUTPUT_TOKENS` | 1000 | | Output cap, also a spend cap. 600 truncated a two-recipe comparison (JSON cut at max_tokens → 503), raised at step 9 |
 | `LLM_TIMEOUT_S` | 15 | | Per attempt |
 | `LLM_MAX_RETRIES` | 1 | | One retry on timeout, 5xx, 429, connection error, invalid output |
 | `PROMPT_VERSION` | `answer.v1` | | File `prompts/answer.v1.md` |

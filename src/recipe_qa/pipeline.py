@@ -157,7 +157,11 @@ class Pipeline:
             raise LLMUnavailableError("no generation model is configured")
         request = build_request(question, constraints, retrieved)
         t = time.perf_counter()
-        trace.llm.update(model=self.deps.llm.model, prompt_version=PROMPT_VERSION)
+        trace.llm.update(
+            provider=getattr(self.deps.llm, "provider", None),
+            model=self.deps.llm.model,
+            prompt_version=PROMPT_VERSION,
+        )
         try:
             result = self.deps.llm.generate(request)
         finally:

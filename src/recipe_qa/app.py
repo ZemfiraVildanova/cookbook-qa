@@ -19,6 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from recipe_qa.config import EMBEDDING_DIM, EMBEDDING_MODEL, STATIC_DIR, Settings, get_settings
 from recipe_qa.corpus import load_corpus
 from recipe_qa.llm import LLMClient, LLMError
+from recipe_qa.llm_anthropic import AnthropicClient
 from recipe_qa.pipeline import Deps, Pipeline
 from recipe_qa.retrieval import Embedder, OpenAIEmbedder, load_index
 from recipe_qa.schemas import AskRequest, AskResponse, ErrorBody, ErrorResponse, HealthResponse
@@ -45,8 +46,17 @@ def build_deps(settings: Settings) -> Deps:
         embedder = OpenAIEmbedder(settings.openai_api_key.get_secret_value())
     else:
         log.warning("OPENAI_API_KEY is not set: retrieval runs in bm25_only mode")
-    llm: LLMClient | None = None  # provider adapters are wired at step 9
+    llm: LLMClient | None = make_llm_client(settings)
+    if llm is None:
+        log.warning("no generation model configured: /ask answers only pre-model exits")
     return Deps(corpus=corpus, index=index, embedder=embedder, llm=llm)
+
+
+def make_llm_client(settings: Settings) -> LLMClient | None:
+    """R-54: provider and model from the environment; None when the key is missing."""
+    if settings.llm_provider == "anthropic" and settings.anthropic_api_key is not None:
+        return AnthropicClient(settings.anthropic_api_key.get_secret_value(), settings.llm_model)
+    return None
 
 
 def _request_id(request: Request) -> str:
