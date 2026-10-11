@@ -1,0 +1,396 @@
+{
+  "components": {
+    "schemas": {
+      "AppliedConstraints": {
+        "additionalProperties": false,
+        "description": "SPEC 5.2: what the parser extracted and the filters enforced.",
+        "properties": {
+          "diet": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Diet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "exclude_ingredients": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Exclude Ingredients",
+            "type": "array"
+          },
+          "include_ingredients": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Include Ingredients",
+            "type": "array"
+          },
+          "max_minutes": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Minutes"
+          }
+        },
+        "title": "AppliedConstraints",
+        "type": "object"
+      },
+      "AskRequest": {
+        "additionalProperties": false,
+        "description": "SPEC 3.2: one question, 1 to 500 characters after strip, no extra fields.",
+        "properties": {
+          "question": {
+            "description": "Natural-language question about recipes in the corpus.",
+            "examples": [
+              "What's a vegetarian dinner I can make in under 30 minutes?"
+            ],
+            "title": "Question",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "AskRequest",
+        "type": "object"
+      },
+      "AskResponse": {
+        "additionalProperties": false,
+        "description": "SPEC 3.3 response body. Invariants I-01..I-04 and I-08 are enforced here.",
+        "properties": {
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          },
+          "applied_constraints": {
+            "$ref": "#/components/schemas/AppliedConstraints"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "refusal_reason": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RefusalReason"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "refused": {
+            "title": "Refused",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "answer",
+          "citations",
+          "refused",
+          "refusal_reason",
+          "applied_constraints",
+          "meta"
+        ],
+        "title": "AskResponse",
+        "type": "object"
+      },
+      "Citation": {
+        "additionalProperties": false,
+        "properties": {
+          "recipe_id": {
+            "title": "Recipe Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "format": "uri",
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "recipe_id",
+          "title",
+          "url"
+        ],
+        "title": "Citation",
+        "type": "object"
+      },
+      "Diet": {
+        "enum": [
+          "vegetarian",
+          "vegan"
+        ],
+        "title": "Diet",
+        "type": "string"
+      },
+      "ErrorBody": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "additionalProperties": false,
+        "description": "SPEC 3.4 body for 503 and 500.",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "corpus_version": {
+            "title": "Corpus Version",
+            "type": "string"
+          },
+          "git_sha": {
+            "title": "Git Sha",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "git_sha",
+          "corpus_version"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "Meta": {
+        "additionalProperties": false,
+        "properties": {
+          "corpus_version": {
+            "title": "Corpus Version",
+            "type": "string"
+          },
+          "latency_ms": {
+            "minimum": 0.0,
+            "title": "Latency Ms",
+            "type": "integer"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "retrieval_mode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        },
+        "required": [
+          "request_id",
+          "model",
+          "prompt_version",
+          "corpus_version",
+          "retrieval_mode",
+          "latency_ms",
+          "usage"
+        ],
+        "title": "Meta",
+        "type": "object"
+      },
+      "RefusalReason": {
+        "enum": [
+          "out_of_corpus",
+          "out_of_domain",
+          "safety"
+        ],
+        "title": "RefusalReason",
+        "type": "string"
+      },
+      "RetrievalMode": {
+        "enum": [
+          "hybrid",
+          "bm25_only",
+          "none"
+        ],
+        "title": "RetrievalMode",
+        "type": "string"
+      },
+      "Usage": {
+        "additionalProperties": false,
+        "properties": {
+          "input_tokens": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Output Tokens",
+            "type": "integer"
+          }
+        },
+        "title": "Usage",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Answers questions from a fixed Wikibooks Cookbook corpus. Contract: SPEC.md.",
+    "title": "Recipe Q&A Service",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/ask": {
+      "post": {
+        "operationId": "ask_ask_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation error (SPEC 3.4)."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unexpected error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Generation model unavailable."
+          }
+        },
+        "summary": "Ask",
+        "tags": [
+          "qa"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "ops"
+        ]
+      }
+    }
+  }
+}

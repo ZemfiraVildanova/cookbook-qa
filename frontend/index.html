@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recipe Q&amp;A</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Recipe Q&amp;A</h1>
+      <p class="hint">
+        Ask about the recipes in this cookbook (a small Wikibooks Cookbook selection). Answers
+        cite recipe pages; questions the corpus cannot answer are refused.
+      </p>
+      <form id="ask-form" class="ask">
+        <label for="question" class="visually-hidden">Question</label>
+        <textarea
+          id="question"
+          name="question"
+          rows="3"
+          maxlength="500"
+          required
+          placeholder="What's a vegetarian dinner I can make in under 30 minutes?"
+        ></textarea>
+        <div class="row">
+          <button id="submit" type="submit">Ask</button>
+          <span id="counter" class="counter">0 / 500</span>
+        </div>
+      </form>
+      <section id="result" class="result" aria-live="polite"></section>
+      <footer class="foot">
+        Recipe text is CC BY-SA 4.0 from
+        <a href="https://en.wikibooks.org/wiki/Cookbook:Table_of_Contents">Wikibooks Cookbook</a>.
+        API: <code>POST /ask</code>, <a href="./docs">OpenAPI</a>.
+      </footer>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "recipe-qa-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "types": "openapi-typescript openapi.json -o src/api.d.ts"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7",
+    "typescript": "^5",
+    "vite": "^7"
+  }
+}
