@@ -55,7 +55,6 @@ def test_with_retry_retries_once_then_raises() -> None:
         llm.with_retry(always, backoff_s=0)
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_anthropic_request_disables_thinking() -> None:
     """R-50 / LLM_THINKING: the Anthropic request carries thinking={"type": LLM_THINKING}."""
     from types import SimpleNamespace

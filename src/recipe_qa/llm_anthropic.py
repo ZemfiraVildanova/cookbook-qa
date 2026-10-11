@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import anthropic
 
-from recipe_qa.config import LLM_MAX_OUTPUT_TOKENS, LLM_TIMEOUT_S
+from recipe_qa.config import LLM_MAX_OUTPUT_TOKENS, LLM_THINKING, LLM_TIMEOUT_S
 from recipe_qa.llm import (
     GenerationRequest,
     LLMInvalidOutputError,
@@ -37,6 +37,7 @@ class AnthropicClient:
                 response = self._client.messages.create(
                     model=self.model,
                     max_tokens=LLM_MAX_OUTPUT_TOKENS,
+                    thinking={"type": LLM_THINKING},  # R-50: no hidden thinking tokens
                     system=request.system,
                     messages=[{"role": "user", "content": request.user}],
                     output_config={
