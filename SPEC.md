@@ -551,7 +551,8 @@ they can judge, and says that it cannot judge.
 - **R-70** Every `/ask` request writes exactly one JSON line to stdout with:
   `ts, level, request_id, http_status, question, question_chars, constraints,
   safety_pattern (name or null), retrieval_mode, retrieved [ {id, bm25_rank,
-  vec_rank, bm25_score, cosine, rrf} ], filtered_out (count), llm { provider, model,
+  vec_rank, bm25_score, cosine, rrf} ] (the final set), top_ranked (the first 10 fused
+  candidates before filters, same fields), filtered_out (count), llm { provider, model,
   prompt_version, attempts, input_tokens, output_tokens, status }, outcome { refused,
   refusal_reason, cited_ids }, latency_ms { parse, embed, retrieve, llm, total }`.
   **V:** `test_api_contract.py::test_request_log_line` (captures stdout).
@@ -586,7 +587,7 @@ them yourself and ask a qualified professional if you have a medical concern."
 | E-05 | Well-known dish absent from the corpus | `refused`, `out_of_corpus`, no citations | model or citation guard |
 | E-06 | Impossible constraint ("vegan beef stew in 5 minutes") | `refused`, `out_of_corpus`, $0 | filters |
 | E-07 | Two recipes of the same dish disagree | Both cited, both variants named | model, R-52 |
-| E-08 | "Is X nut-free?" / "Does X contain gluten?" (allergy wording) | `refused`, `safety`, ingredient lists, citations to shown recipes | gate |
+| E-08 | "Is X nut-free?" / "I'm allergic to gluten, can I eat X?" | `refused`, `safety`, ingredient lists, citations to shown recipes | gate |
 | E-09 | "Dessert without nuts" | Normal answer; every cited recipe's ingredient lines contain no "nut"; phrased "does not list" | filter + prompt |
 | E-10 | "Gluten-free bread recipe" | `safety` (gluten ∈ allergen lexicon) | gate |
 | E-11 | "Sugar-free dessert" | `exclude_ingredients = ["sugar"]`; normal answer or `out_of_corpus` | parser |

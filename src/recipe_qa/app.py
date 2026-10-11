@@ -1,39 +1,29 @@
-"""FastAPI application: routes, request ids and error handling (SPEC section 3).
+"""FastAPI application: routes, request ids, dependency wiring and error mapping (SPEC 3).
 
-Walking skeleton: `/health` and a `/ask` that returns a contract-valid refusal. The
-pipeline stages (safety gate, constraints, retrieval, generation) are wired in later
-steps; every response already satisfies the invariants in SPEC 3.5.
+The pipeline (`pipeline.py`) produces every outcome; this module only validates input,
+wires dependencies at startup and maps exceptions to the error contract of SPEC 3.4.
 """
 
 from __future__ import annotations
 
-import time
+import logging
 import uuid
-from collections.abc import Awaitable, Callable
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from recipe_qa.config import REFUSAL_TEMPLATES, STATIC_DIR, Settings, get_settings
-from recipe_qa.schemas import (
-    AppliedConstraints,
-    AskRequest,
-    AskResponse,
-    ErrorBody,
-    ErrorResponse,
-    HealthResponse,
-    Meta,
-    RefusalReason,
-    RetrievalMode,
-    Usage,
-)
+from recipe_qa.config import EMBEDDING_DIM, EMBEDDING_MODEL, STATIC_DIR, Settings, get_settings
+from recipe_qa.corpus import load_corpus
+from recipe_qa.llm import LLMClient, LLMError
+from recipe_qa.pipeline import Deps, Pipeline
+from recipe_qa.retrieval import Embedder, OpenAIEmbedder, load_index
+from recipe_qa.schemas import AskRequest, AskResponse, ErrorBody, ErrorResponse, HealthResponse
 
-if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+log = logging.getLogger(__name__)
 
 PLACEHOLDER_HTML = (
     "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
@@ -44,6 +34,21 @@ PLACEHOLDER_HTML = (
 )
 
 
+def build_deps(settings: Settings) -> Deps:
+    """Production wiring: committed corpus and index (R-63), API embedder, provider model."""
+    corpus = load_corpus(settings.corpus_path)
+    index = load_index(
+        settings.embeddings_path, corpus, model=EMBEDDING_MODEL, dimension=EMBEDDING_DIM
+    )
+    embedder: Embedder | None = None
+    if settings.openai_api_key is not None:
+        embedder = OpenAIEmbedder(settings.openai_api_key.get_secret_value())
+    else:
+        log.warning("OPENAI_API_KEY is not set: retrieval runs in bm25_only mode")
+    llm: LLMClient | None = None  # provider adapters are wired at step 9
+    return Deps(corpus=corpus, index=index, embedder=embedder, llm=llm)
+
+
 def _request_id(request: Request) -> str:
     rid: str | None = getattr(request.state, "request_id", None)
     return rid or "unknown"
@@ -52,20 +57,19 @@ def _request_id(request: Request) -> str:
 def _error_response(status: int, code: str, message: str, request_id: str) -> JSONResponse:
     body = ErrorResponse(error=ErrorBody(code=code, message=message, request_id=request_id))
     return JSONResponse(
-        status_code=status,
-        content=body.model_dump(),
-        headers={"X-Request-ID": request_id},
+        status_code=status, content=body.model_dump(), headers={"X-Request-ID": request_id}
     )
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
-    """Build the application. `settings` is injectable for tests."""
+def create_app(settings: Settings | None = None, deps: Deps | None = None) -> FastAPI:
+    """Build the application. `settings` and `deps` are injectable for tests."""
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.settings = settings or get_settings()
-        # Corpus and index loading, with the hash check of R-63, arrive at steps 5 to 7.
-        app.state.corpus_version = "none"
+        wired = deps or build_deps(app.state.settings)
+        app.state.pipeline = Pipeline(wired)
+        app.state.corpus_version = wired.corpus.corpus_version
         yield
 
     app = FastAPI(
@@ -84,10 +88,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         response.headers["X-Request-ID"] = request.state.request_id
         return response
 
+    @app.exception_handler(LLMError)
+    async def llm_error(request: Request, exc: LLMError) -> JSONResponse:
+        # R-61: an operational failure is a 503, never a refusal.
+        return _error_response(
+            503, exc.code, "The generation model is unavailable; try again.", _request_id(request)
+        )
+
     @app.exception_handler(Exception)
     async def unexpected_error(request: Request, exc: Exception) -> JSONResponse:
-        # R-64: the stack trace goes to the log (uvicorn prints it), never to the client.
-        del exc
+        # R-64: the stack trace goes to the server log, never to the client.
+        log.exception("unhandled error for request %s", _request_id(request), exc_info=exc)
         return _error_response(500, "internal", "Unexpected error.", _request_id(request))
 
     @app.get("/health", response_model=HealthResponse, tags=["ops"])
@@ -110,25 +121,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         tags=["qa"],
     )
     async def ask(body: AskRequest, request: Request) -> AskResponse:
-        started = time.perf_counter()
-        # Skeleton behavior: no pipeline yet, every question is refused as out_of_corpus.
-        latency_ms = int((time.perf_counter() - started) * 1000)
-        return AskResponse(
-            answer=REFUSAL_TEMPLATES["out_of_corpus"],
-            citations=[],
-            refused=True,
-            refusal_reason=RefusalReason.OUT_OF_CORPUS,
-            applied_constraints=AppliedConstraints(),
-            meta=Meta(
-                request_id=_request_id(request),
-                model=None,
-                prompt_version=None,
-                corpus_version=request.app.state.corpus_version,
-                retrieval_mode=RetrievalMode.NONE,
-                latency_ms=latency_ms,
-                usage=Usage(),
-            ),
-        )
+        pipeline: Pipeline = request.app.state.pipeline
+        return pipeline.ask(body.question, _request_id(request))
 
     static_dir = Path(STATIC_DIR)
     if static_dir.is_dir():

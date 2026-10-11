@@ -31,9 +31,9 @@ def test_health_fields(client: TestClient) -> None:
     assert r.headers["X-Request-ID"]
 
 
-def test_ask_skeleton_is_contract_valid(client: TestClient) -> None:
-    """SPEC 3.3/3.5: the response validates against the schema and its invariants."""
-    r = client.post("/ask", json={"question": "How do I make carbonara?"})
+def test_ask_safety_refusal_is_contract_valid(client: TestClient) -> None:
+    """SPEC 3.3/3.5: a pre-model refusal validates against the schema and its invariants."""
+    r = client.post("/ask", json={"question": "Is this nut-free?"})
     assert r.status_code == 200
     body = r.json()
     parsed = AskResponse.model_validate(body)  # enforces I-01..I-05, I-08
@@ -77,7 +77,9 @@ def test_malformed_json_is_422(client: TestClient) -> None:
 
 def test_question_at_max_length_is_accepted(client: TestClient) -> None:
     """SPEC 3.2: exactly QUESTION_MAX_CHARS after strip is valid."""
-    r = client.post("/ask", json={"question": "  " + "q" * QUESTION_MAX_CHARS + "  "})
+    prefix = "Is this nut-free? "
+    question = prefix + "q" * (QUESTION_MAX_CHARS - len(prefix))
+    r = client.post("/ask", json={"question": "  " + question + "  "})
     assert r.status_code == 200
 
 

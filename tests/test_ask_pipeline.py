@@ -27,8 +27,6 @@ from recipe_qa.llm import LLMInvalidOutputError, LLMStatus, LLMUnavailableError
 from recipe_qa.schemas import AskResponse, RefusalReason
 from tests.fakes import FakeEmbedder, FakeLLM, answered, make_recipe, refusal
 
-pytestmark = pytest.mark.xfail(strict=True, reason="implemented in next commit")
-
 ROOT = Path(__file__).resolve().parent.parent
 CORPUS_PATH = ROOT / "data" / "corpus.json"
 
@@ -45,7 +43,9 @@ def make_client(llm: FakeLLM, embedder: FakeEmbedder | None = None) -> tuple[Tes
 
     c = corpus()
     emb = embedder or FakeEmbedder()
-    vectors, ids = build_vectors(c, emb)
+    vectors, ids = build_vectors(
+        c, FakeEmbedder()
+    )  # the index is always built; `emb` may fail at query time
     deps = Deps(corpus=c, index=Index(c, vectors, ids), embedder=emb, llm=llm)
     settings = Settings(git_sha="testsha", _env_file=None)  # type: ignore[call-arg]
     client = TestClient(create_app(settings, deps=deps), raise_server_exceptions=False)
