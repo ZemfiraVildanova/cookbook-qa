@@ -68,12 +68,22 @@ close it. None of them is built, even partially.
 - Variety quotas, checked by `tests/test_corpus_integrity.py`:
   - at least 3 pairs of recipes for the same dish (recorded in `data/manifest.yaml` as
     `pairs`), so "recipes that disagree" is testable;
-  - at least 8 pages without the `recipesummary` template ("different levels of
-    structure");
+  - different levels of structure, measured as: at least 2 pages without the
+    `recipesummary` template and at least 8 pages with no parseable time. (v1 asked for
+    8 template-less pages; a Wikibooks search with `-hastemplate:"Recipe summary"` over
+    the eight categories used finds only two such pages, Edikang Ikong and Shakshuka,
+    and both are in the corpus.)
   - at least 10 pages with a diet category (vegetarian or vegan);
   - at least 30 pages with a known total time.
 - Selection is manual, from the candidate list printed by `scripts/ingest.py --list`,
   and the rationale is recorded as comments in `data/manifest.yaml`.
+- Actual corpus (built 2026-10-11, `corpus_version` `40eeca491bc2`): 55 recipes in seven
+  groups (soups 8, desserts 11, vegetarian and vegan dishes 13, pasta and noodles 7,
+  Italian 6, Indian 7, Mexican 3); 16 same-dish pairs; 32 pages with a known time and
+  23 without; diet vegetarian yes 27 / no 9 / unknown 19, vegan yes 15 / no 35 /
+  unknown 5; 2 pages without the template; 1 page with a wikitable ingredient list;
+  17 pages without a lead paragraph. The categories "Pasta recipes" and "Noodle recipes"
+  are empty on Wikibooks; "Recipes using pasta and noodles" is used instead.
 - Redirect pages (for example `Cookbook:Carbonara` → `Cookbook:Spaghetti alla
   Carbonara`) are resolved with `redirects=1`; the canonical page is stored, the
   redirect title is not a separate recipe.
