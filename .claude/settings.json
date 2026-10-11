@@ -1,0 +1,28 @@
+{
+  "attribution": { "commit": "", "pr": "", "sessionUrl": false },
+  "permissions": {
+    "allow": [
+      "Bash(uv *)", "Bash(uvx *)", "Bash(pytest *)", "Bash(ruff *)", "Bash(mypy *)",
+      "Bash(npm *)", "Bash(npx *)", "Bash(docker build *)", "Bash(pre-commit *)", "Bash(gitleaks *)",
+      "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)", "Bash(git add *)",
+      "Bash(git commit *)", "Bash(git push)", "Bash(git push origin main)"
+    ],
+    "deny": [
+      "Read(./.env)", "Read(./.env.local)", "Bash(cat .env)", "Bash(cat ./.env)",
+      "Bash(source .env)", "Bash(. .env)",
+      "Bash(git push --force*)", "Bash(git push -f*)", "Bash(git push * --force*)", "Bash(git push * -f*)",
+      "Bash(git commit --amend*)", "Bash(git rebase*)", "Bash(git reset --hard*)",
+      "Bash(curl *api.northflank.com*)", "Bash(curl *NORTHFLANK_API_TOKEN*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Edit|Write", "hooks": [
+        { "type": "command", "command": "\"${CLAUDE_PROJECT_DIR}/.claude/hooks/format-python.sh\"", "timeout": 30 } ] }
+    ],
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [
+        { "type": "command", "command": "\"${CLAUDE_PROJECT_DIR}/.claude/hooks/tests-before-commit.sh\"", "timeout": 180 } ] }
+    ]
+  }
+}
