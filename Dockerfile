@@ -4,8 +4,17 @@
 
 ARG PYTHON_IMAGE=python:3.12-slim-bookworm@sha256:34386ef0cb081344d7ec1c103ba398e6e9f64e9ab3a1509accc92a4e24a07258
 ARG UV_IMAGE=ghcr.io/astral-sh/uv:0.13.0@sha256:cdc6093146eb3ff6a40107b38f008b789e050e77ad87865e381d9917da55a168
+ARG NODE_IMAGE=node:26-bookworm-slim@sha256:86f07bc9c5dce4578cf37e5a418b7bfc7f817cda25cde66e2b66e95ed86c4567
 
 FROM ${UV_IMAGE} AS uv
+
+# --- Frontend (Vite + TypeScript) -------------------------------------------------------
+FROM ${NODE_IMAGE} AS frontend
+WORKDIR /ui
+COPY frontend/package.json frontend/package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+COPY frontend/ ./
+RUN npm run build
 
 # --- Python dependencies ----------------------------------------------------------------
 FROM ${PYTHON_IMAGE} AS deps
@@ -33,6 +42,7 @@ WORKDIR /app
 COPY --from=deps --chown=app:app /app/.venv /app/.venv
 COPY --chown=app:app src ./src
 COPY --chown=app:app data ./data
+COPY --from=frontend --chown=app:app /ui/dist ./static
 USER app
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
