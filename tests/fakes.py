@@ -8,6 +8,7 @@ import re
 import numpy as np
 
 from recipe_qa.corpus import Recipe
+from recipe_qa.llm import GenerationRequest, LLMOutput, LLMResult, LLMStatus
 
 _TOKEN = re.compile(r"[a-z0-9]+")
 
@@ -63,3 +64,38 @@ class FakeEmbedder:
             if norm:
                 out[i] /= norm
         return out
+
+
+class FakeLLM:
+    """Scripted LLM: returns queued outputs or raises queued exceptions; records requests."""
+
+    model = "fake-llm"
+
+    def __init__(self, script: list[LLMOutput | Exception] | None = None) -> None:
+        self.script = list(script or [])
+        self.requests: list[GenerationRequest] = []
+        self.calls = 0
+
+    def generate(self, request: GenerationRequest) -> LLMResult:
+        self.calls += 1
+        self.requests.append(request)
+        item: LLMOutput | Exception | None = self.script.pop(0) if self.script else None
+        if isinstance(item, Exception):
+            raise item
+        if item is None:  # default: answer citing the first allowed recipe
+            item = LLMOutput(
+                status=LLMStatus.ANSWERED,
+                answer="A grounded answer from the fake model.",
+                cited_ids=request.allowed_ids[:1],
+            )
+        return LLMResult(
+            output=item, model=self.model, input_tokens=120, output_tokens=40, attempts=1
+        )
+
+
+def answered(cited_ids: list[str], answer: str = "Grounded answer.") -> LLMOutput:
+    return LLMOutput(status=LLMStatus.ANSWERED, answer=answer, cited_ids=cited_ids)
+
+
+def refusal(status: LLMStatus) -> LLMOutput:
+    return LLMOutput(status=status, answer="", cited_ids=[])

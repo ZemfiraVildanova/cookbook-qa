@@ -8,8 +8,6 @@ from recipe_qa import safety
 from recipe_qa.config import SAFETY_DISCLAIMER
 from tests.fakes import make_recipe
 
-pytestmark = pytest.mark.xfail(strict=True, reason="implemented in next commit")
-
 
 @pytest.mark.parametrize(
     ("question", "pattern"),
