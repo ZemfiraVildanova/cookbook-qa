@@ -1,0 +1,22 @@
+# Secrets: keys live in the environment, never in the repository
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Local artifacts
+.DS_Store
+*.log
