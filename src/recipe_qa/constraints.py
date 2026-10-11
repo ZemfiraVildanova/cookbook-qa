@@ -189,8 +189,32 @@ def parse_constraints(question: str, index: IngredientIndex) -> AppliedConstrain
 
 
 def recipe_passes(recipe: Recipe, constraints: AppliedConstraints) -> bool:
-    raise NotImplementedError
+    """Three-valued hard filters (R-11): unknown metadata never satisfies a constraint."""
+    if constraints.max_minutes is not None and (
+        recipe.total_minutes is None or recipe.total_minutes > constraints.max_minutes
+    ):
+        return False  # R-12
+    if constraints.diet is not None and recipe.diet.get(constraints.diet.value) != "yes":
+        return False  # R-13
+    lines = [line.lower() for line in recipe.ingredients]
+    if constraints.include_ingredients:
+        if not lines:
+            return False
+        for term in constraints.include_ingredients:  # R-14
+            terms = expand_terms(term)
+            if not any(_include_match(terms, line) for line in lines):
+                return False
+    if constraints.exclude_ingredients:
+        if not lines:
+            return False
+        for term in constraints.exclude_ingredients:  # R-15
+            terms = expand_terms(term)
+            dairy = term == "dairy"
+            if any(_exclude_match(terms, line, dairy) for line in lines):
+                return False
+    return True
 
 
 def apply_filters(recipes: Sequence[Recipe], constraints: AppliedConstraints) -> list[Recipe]:
-    raise NotImplementedError
+    """Survivors in their original order."""
+    return [r for r in recipes if recipe_passes(r, constraints)]
