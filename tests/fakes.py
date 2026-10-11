@@ -44,7 +44,7 @@ class FakeEmbedder:
     """Bag-of-hashed-words vectors: texts sharing words get a high cosine. Deterministic."""
 
     model = "fake-embedder"
-    dimension = 64
+    dimension = 4096
 
     def __init__(self, fail: bool = False) -> None:
         self.fail = fail

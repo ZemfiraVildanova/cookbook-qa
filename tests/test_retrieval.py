@@ -13,8 +13,6 @@ from recipe_qa.corpus import Corpus, compute_version
 from recipe_qa.schemas import AppliedConstraints, Diet, RetrievalMode
 from tests.fakes import FakeEmbedder, make_recipe
 
-pytestmark = pytest.mark.xfail(strict=True, reason="implemented in next commit")
-
 
 def corpus() -> Corpus:
     recipes = [
@@ -186,7 +184,7 @@ def test_save_and_load_index_roundtrip(tmp_path: Path) -> None:
     retrieval.save_index(
         path, vectors=vectors, ids=ids, model="fake-embedder", corpus_version=c.corpus_version
     )
-    index = retrieval.load_index(path, c, model="fake-embedder", dimension=64)
+    index = retrieval.load_index(path, c, model="fake-embedder", dimension=FakeEmbedder.dimension)
     result = index.retrieve("walnut cake", AppliedConstraints(), FakeEmbedder())
     assert result.retrieved[0].id == "walnut-cake"
 
@@ -200,7 +198,7 @@ def test_index_hash_mismatch_fails(tmp_path: Path) -> None:
         path, vectors=vectors, ids=ids, model="fake-embedder", corpus_version="deadbeefcafe"
     )
     with pytest.raises(retrieval.IndexMismatchError):
-        retrieval.load_index(path, c, model="fake-embedder", dimension=64)
+        retrieval.load_index(path, c, model="fake-embedder", dimension=FakeEmbedder.dimension)
 
 
 def test_index_model_or_dimension_mismatch_fails(tmp_path: Path) -> None:
@@ -211,7 +209,7 @@ def test_index_model_or_dimension_mismatch_fails(tmp_path: Path) -> None:
         path, vectors=vectors, ids=ids, model="fake-embedder", corpus_version=c.corpus_version
     )
     with pytest.raises(retrieval.IndexMismatchError):
-        retrieval.load_index(path, c, model="other-model", dimension=64)
+        retrieval.load_index(path, c, model="other-model", dimension=FakeEmbedder.dimension)
     with pytest.raises(retrieval.IndexMismatchError):
         retrieval.load_index(path, c, model="fake-embedder", dimension=1536)
 
