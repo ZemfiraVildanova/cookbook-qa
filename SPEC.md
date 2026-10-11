@@ -768,7 +768,7 @@ hit@1, hit@4 and MRR for BM25 only, embeddings only and hybrid.
 `refused`, `refusal_reason`, `cites_any: [ids]`, `cites_all: [ids]`, `no_citations`,
 `min_citations: n`, `constraints_satisfied: true` (every cited recipe satisfies
 `applied_constraints` by corpus metadata), `applied_constraints: {...}` (equality),
-`answer_contains_any: [strings]`, `http_status`.
+`answer_contains_any: [strings]`, `model_called: bool` (`meta.model` is non-null), `http_status`.
 
 | Id | Group | Assertion |
 |---|---|---|
@@ -788,8 +788,9 @@ hit@1, hit@4 and MRR for BM25 only, embeddings only and hybrid.
 | P-01, P-02, P-03 | Empty question; 501 chars; malformed JSON | `http_status: 422` |
 
 Harness: `evals/run_evals.py --target <URL> --runs N`. For every response: JSON Schema
-validation, invariants I-01..I-08 (I-06 from the log is checked only in local runs),
-then the case assertions. Output: pass/fail table, JSON report with per-case latency,
+validation, invariants I-01..I-05, I-07 and I-08 (I-06 is enforced by the server guard
+R-04 and tested with the fake model; the harness does not read the log), then the case
+assertions. Output: pass/fail table, JSON report with per-case latency,
 tokens and cost in `evals/reports/`, non-zero exit on any failure.
 
 Pass rule: a case passes only if it passes in every run; a flaky case counts as failed.

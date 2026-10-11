@@ -1,0 +1,26 @@
+# Vendor list prices used by evals/run_evals.py to turn token counts into dollars.
+# Every row names the vendor page it was read from and the date it was checked.
+# USD per 1,000,000 tokens. Standard (non-batch) tier; prompts here are far below any
+# long-context threshold, so only the base tier is listed.
+checked: "2026-10-11"
+models:
+  claude-haiku-5-5:
+    vendor: anthropic
+    input_per_mtok: 0.10
+    output_per_mtok: 0.50
+    source: https://claude.com/pricing
+  claude-sonnet-5-5:
+    vendor: anthropic
+    input_per_mtok: 2.00
+    output_per_mtok: 10.00
+    source: https://claude.com/pricing
+  gpt-6-luna:
+    vendor: openai
+    input_per_mtok: 0.10
+    output_per_mtok: 0.50
+    source: https://developers.openai.com/api/docs/pricing
+  text-embedding-3-small:
+    vendor: openai
+    input_per_mtok: 0.02
+    output_per_mtok: 0.0
+    source: https://developers.openai.com/api/docs/pricing
