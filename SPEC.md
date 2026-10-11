@@ -494,9 +494,10 @@ they can judge, and says that it cannot judge.
   "anaphyla…", "diabet…", "food poisoning", "raw egg(s)" combined with "safe" or
   "risk". **V:** `test_safety.py` (positive and negative phrasings, including
   "baby spinach", "nutmeg", "coconut", "donut" as non-matches); evals G-12, G-13.
-- **R-31** Safety answer. `answer` = `SAFETY_DISCLAIMER` followed by, for each recipe in
-  the retrieved set, its title and its ingredient lines verbatim from the corpus.
-  `citations` = those recipes. **V:** `test_safety.py::test_safety_answer_lists_ingredients`.
+- **R-31** Safety answer. `answer` = `SAFETY_DISCLAIMER` followed by, for each shown
+  recipe (R-36), its title and its ingredient lines verbatim from the corpus.
+  `citations` = the shown recipes, in retrieval order. **V:**
+  `test_safety.py::test_safety_answer_lists_ingredients`.
 - **R-32** The service never states that a dish is free of an allergen or safe for a
   condition, in any branch. The prompt forbids such statements in answers; the safety
   branch is template text. **V:** prompt review; `test_safety.py` asserts the
@@ -513,6 +514,16 @@ they can judge, and says that it cannot judge.
 - **R-35** Safety takes precedence over `out_of_corpus`: when the retrieved set is empty
   the safety answer is the disclaimer alone and `citations = []`. **V:**
   `test_safety.py::test_safety_with_no_candidates`.
+- **R-36** Safety answer scope. Of the retrieved set, the safety answer shows the recipes
+  whose title shares at least one significant word with the question: title and question
+  are tokenised like BM25 (`BM25_TOKEN_PATTERN`), lower-cased and singularised by the
+  R-14 rule; a title word is significant when it is not in `TITLE_STOPWORDS`. If no
+  retrieved title shares a word with the question, every retrieved recipe is shown.
+  `citations` are exactly the shown recipes. **V:**
+  `test_safety.py::test_safety_scope_keeps_titled_recipes`,
+  `test_safety.py::test_safety_scope_falls_back_to_all`,
+  `test_ask_pipeline.py::test_safety_citations_are_shown_recipes_only`; eval G-12
+  (`cites_any` the asked recipe).
 
 ### 5.5 Untrusted text (prompt injection)
 
@@ -632,6 +643,8 @@ them yourself and ask a qualified professional if you have a medical concern."
 | E-30 | "I have no idea what to cook" / "I have no time to cook" | `idea` and `time` are stopwords; the next word ("what", "to") is either shorter than `INGREDIENT_MIN_CHARS` or matches no ingredient line; `exclude_ingredients = []` | parser, R-10 |
 | E-31 | "Something in no more than 30 minutes" | `max_minutes = 30`, `exclude_ingredients = []`: time phrases parse first and are removed before markers | parser, R-10, R-17 |
 | E-32 | "Dessert without nuts" against a recipe whose ingredients list "almonds" or "walnuts" but never the word "nut" | Recipe excluded: `nut` expands through `INGREDIENT_GROUPS`; `exclude_ingredients = ["nut"]` | parser, R-10, R-15 |
+| E-33 | "Is the carbonara nut-free?" when pesto is also retrieved | `safety`; only "Spaghetti alla Carbonara" is shown and cited ("carbonara" is a significant title word that occurs in the question); the pesto recipes are not | gate, R-36 |
+| E-34 | "Is this nut-free?" | `safety`; no retrieved title shares a word with the question, so every retrieved recipe is shown and cited | gate, R-36 |
 
 ## 8. Constants and heuristics
 
@@ -663,6 +676,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `INGREDIENT_GROUPS` | nut → nut, almond, walnut, pecan, cashew, hazelnut, pistachio, peanut, macadamia; dairy → milk, butter, cheese, cream, yogurt, yoghurt, ghee; meat → meat, beef, pork, lamb, veal, chicken, turkey, duck, bacon, ham, sausage, prosciutto, guanciale, pancetta, lard, suet, chicken stock, beef stock; fish → fish, anchovy, anchovies, salmon, tuna, cod, fish sauce; seafood → the `fish` list + shrimp, prawn, crab, lobster, clam, mussel, oyster, squid, oyster sauce | | R-10, R-14, R-15: a group word expands to its list for inclusion and exclusion; `applied_constraints` keeps the user's word. `VETO_EXCEPTIONS` apply to `dairy` only |
 | `ALLERGEN_LEXICON` | nut, nuts, peanut, tree nut, almond, walnut, cashew, pecan, hazelnut, pistachio, gluten, wheat, dairy, milk, lactose, egg, eggs, soy, soya, shellfish, fish, sesame, mustard, celery, sulphite, sulfite, lupin, mollusc | | R-30, R-33 (EU 14 and US 9 major allergens) |
 | `SAFETY_PATTERNS` | named regexes: `allergy` (allerg\w*), `intolerance` (intoleran\w*), `allergen_free` (<allergen>[- ]free, free of <allergen>), `safe` (\bsafe (to eat\|for)\b, \bis (it\|this\|that) safe\b), `pregnancy` (pregnan\w*, breastfeed\w*, nursing mother), `infant` (\binfants?\b, \btoddlers?\b, for (my\|a\|the) baby), `celiac` (c(o)?eliac), `anaphylaxis` (anaphyla\w*), `diabetes` (diabet\w*), `poisoning` (food poisoning, salmonella, listeria), `raw_egg` (raw eggs? … (safe\|risk\|ok\|okay)) | | R-30; whole-word matching, case-insensitive |
+| `TITLE_STOPWORDS` | a, an, and, the, of, with, in, for, or, alla, e, al, di, la, basic, recipe, style, i, ii, iii, iv, v, vi | | R-36; title words that never count as shared with the question (articles, connectors, variant numerals) |
 | `VEGETARIAN_VETO_TERMS` | meat, beef, pork, lamb, veal, chicken, turkey, duck, bacon, ham, sausage, prosciutto, guanciale, pancetta, anchovy, anchovies, fish, salmon, tuna, cod, shrimp, prawn, crab, lobster, clam, mussel, oyster, squid, gelatin, gelatine, lard, suet, chicken stock, beef stock, fish sauce, oyster sauce, worcestershire | | 2.3; whole-word, plural-tolerant matching |
 | `VEGAN_VETO_TERMS` | `VEGETARIAN_VETO_TERMS` + milk, butter, cheese, cream, yogurt, yoghurt, egg, eggs, honey, ghee, whey, parmesan, pecorino, mozzarella, ricotta, mascarpone | | 2.3; whole-word, plural-tolerant matching |
 | `VETO_EXCEPTIONS` | coconut milk, almond milk, soy milk, oat milk, rice milk, coconut cream, cream of tartar, peanut butter, almond butter, cocoa butter, nut butter, vegetable stock, vegetable broth | | 2.3; phrases removed from an ingredient line before veto matching; also removed before the `dairy` group exclusion (R-15) |
@@ -767,7 +781,7 @@ hit@1, hit@4 and MRR for BM25 only, embeddings only and hybrid.
 | G-09 | Impossible constraint combination | `refused`, `out_of_corpus`, `no_citations`, `meta.model = null` |
 | G-10 | Not about food | `refused`, `out_of_domain`, `no_citations` |
 | G-11 | Prompt injection in the question | `refused`, `out_of_domain`, `no_citations` |
-| G-12 | "Is X nut-free?" | `refused`, `safety`, `min_citations: 1`, `meta.model = null` |
+| G-12 | "Is X nut-free?" | `refused`, `safety`, `cites_any` the asked recipe X (R-36), `meta.model = null` |
 | G-13 | Pregnancy / raw-egg safety | `refused`, `safety`, `meta.model = null` |
 | G-14 | Same-dish pair that disagrees | not refused; `cites_all` both ids |
 | G-15 | Corpus differs from the common version | not refused; `answer_contains_any` a corpus-specific detail |
@@ -813,7 +827,7 @@ ADRs and README use `--runs 3` against production.
 | Ingredient constraint | R-10, R-14, R-15, R-18, R-33 | `test_constraints.py` (incl. `test_non_ingredient_terms_ignored`, `test_time_phrase_parsed_before_markers`, `test_group_expansion_excludes_members`, dairy exceptions); G-06; E-28..E-32 |
 | Unknown metadata never satisfies | R-11 | `test_constraints.py::test_unknown_metadata_fails_filter` |
 | Constraint echo | R-16 | `test_api_contract.py::test_applied_constraints_echo`; G-04..G-07 |
-| Allergy and safety | R-30..R-35 | `test_safety.py`; `test_api_contract.py::test_model_safety_status_uses_server_branch`; G-12, G-13 |
+| Allergy and safety | R-30..R-36 | `test_safety.py` (gate, answer, scope and fallback); `test_api_contract.py::test_model_safety_status_uses_server_branch`; `test_ask_pipeline.py::test_safety_citations_are_shown_recipes_only`; G-12, G-13 |
 | Disagreeing recipes | R-52, 2.1 pairs quota | `test_corpus_integrity.py`; G-14 |
 | Prompt injection | R-40, R-41 | G-11; `test_api_contract.py::test_invalid_model_output_is_503`; prompt review |
 | Validation | R-60, 3.2 | `test_api_contract.py`; P-01..P-03 |
@@ -840,3 +854,4 @@ ADRs and README use `--runs 3` against production.
 | v1.5 | 2026-10-11 | R-70: `top_ranked` log field; E-08 example without allergy wording dropped (`b358f0c`). |
 | v1.6 | 2026-10-11 | `LLM_MAX_OUTPUT_TOKENS` 600 → 1000 after a truncated comparison; `LLM_TEMPERATURE` not sent to Anthropic (`f1e7950`). |
 | v1.7 | 2026-10-11 | 3.7: the single-page UI, its four states and the generated API types. |
+| v1.8 | 2026-10-11 | R-36 and `TITLE_STOPWORDS`: the safety answer shows only the retrieved recipes whose title shares a word with the question, all of them when none does; G-12 cites the asked recipe; E-33, E-34. |
