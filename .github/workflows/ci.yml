@@ -113,11 +113,14 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           # -e NAME passes the variable from the environment; no key appears on a command line.
+          t0=$(date +%s%N)
           docker run -d --rm -p 8000:8000 --name cq -e ANTHROPIC_API_KEY -e OPENAI_API_KEY "$TAG"
-          for i in $(seq 1 30); do
+          for i in $(seq 1 150); do
             curl -fsS http://localhost:8000/health >/dev/null 2>&1 && break
-            sleep 1
+            sleep 0.2
           done
+          t1=$(date +%s%N)
+          echo "cold start to /health 200: $(( (t1 - t0) / 1000000 )) ms (SPEC 9 target 5000 ms)" | tee -a "$GITHUB_STEP_SUMMARY"
           sha=$(curl -fsS http://localhost:8000/health | jq -r .git_sha)
           test "$sha" = "$GITHUB_SHA" || { echo "git_sha mismatch: $sha"; docker logs cq; exit 1; }
       - name: Eval gate, the full golden set against the container (SPEC 12.3)
