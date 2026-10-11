@@ -642,6 +642,7 @@ only where an `Env` name is given). A constant that is not in this table is a de
 | `REFUSAL_TEMPLATES` | section 6 texts | | R-20 |
 | `SAFETY_DISCLAIMER` | section 6 text | | R-31 |
 | `CORPUS_PATH`, `EMBEDDINGS_PATH` | `data/corpus.json`, `data/embeddings.npz` | `CORPUS_PATH`, `EMBEDDINGS_PATH` | Loaded at start |
+| `STATIC_DIR` | `static` | | Directory of the built UI served at `/`; a placeholder HTML page is served when it is absent |
 | `GIT_SHA` | `unknown` | `GIT_SHA` | Returned by `/health` |
 | `LOG_LEVEL` | `INFO` | `LOG_LEVEL` | |
 | `PORT` | 8000 | `PORT` | Listening port |
