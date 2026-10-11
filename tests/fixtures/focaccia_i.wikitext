@@ -1,0 +1,77 @@
+{{recipe summary
+| category    = Bread recipes
+| servings    = One 11"x14" loaf
+| time        = 3-4 hours
+| difficulty  = 3
+| image       = [[File:Focaccia.jpg|250px]]
+| energy      = 
+| note        = 
+}}
+
+{{recipe}} | [[Cookbook:Cuisine of Italy|Cuisine of Italy]] | [[Cookbook:Bread|Bread]]
+
+'''Focaccia''' is a flat, leavened [[Cookbook:Bread|bread]] native to Italy.
+
+==Ingredients==
+{| class="wikitable" style="background: none;color:inherit;"
+!Ingredient
+!Count
+!Volume<ref group="note">Weight conversions from USDA National Nutrient Database. Original recipe text and ingredient order preserved. </ref>
+!Weight
+![[Cookbook:Baker's Percentage|Baker's %]]<ref group="note">[[wikipedia:baker percentage|Baker's percentages.]] This column represents the total formula.  The procedure section describes a modified [[wikipedia:Sponge_and_dough|sponge and dough]] process.</ref>
+|-
+|Active dry [[cookbook:Yeast|yeast]] (non-instant) <ref group="note">This amount of yeast will result in a perceptible yeast flavor.  To reduce this flavor, it is recommend to use no more than 1.05% active dry yeast, although you can expect fermentation time to increase somewhat.  Further reductions will result in less yeast flavor and longer [[wikipedia:Straight dough|bulk fermentation]] times.</ref>
+|
+|2 [[Cookbook:Teaspoon|teaspoons]]
+|8 [[Cookbook:Gram|g]]
+|1.6%
+|-
+|Warm water (approx. 110°F / 43°C)
+|
+|1 ½ [[Cookbook:Cup|cups]]
+|355.5 g
+|71.1%
+|-
+|Unbleached [[Cookbook:All-purpose flour|all-purpose flour]]
+|
+|4 cups
+|500 g
+|100%
+|-
+|Extra-virgin [[Cookbook:Olive Oil|olive oil]]
+|
+|5 [[Cookbook:Tablespoon|tablespoons]]
+|67.5 g
+|13.5%
+|-
+|Sea [[Cookbook:Salt|salt]]
+|
+|3 teaspoons
+|18 g
+|3.6%
+|-
+|'''Total'''
+|
+|'''n/a'''
+|'''949 g'''
+|'''190%'''
+|}
+
+==Procedure==
+
+# Sprinkle one teaspoon of the yeast over ½ cup of the water in a medium bowl. Stir to mix, and let stand 10 minutes. Stir in ¾ cup flour, cover tightly with plastic and let rise in warm place until doubled, about 45 minutes.
+# In a large bowl, sprinkle the remaining teaspoon of yeast over 1 cup of warm water, mix and let stand 10 minutes. Add the first yeast mixture (now risen) along with 3 tablespoons of olive oil and 2 teaspoons of salt, mix well. Add the remaining flour gradually, mixing well after each addition until well incorporated.
+# On a lightly floured work surface, turn the dough out and [[Cookbook:Kneading|knead]] until soft, about 10 minutes.
+# Place the dough in a lightly oiled bowl, cover tightly and let rise in warm place until doubled, about 1 ½ hours.
+# Oil an 11" x 14" (28 cm x 36 cm) baking pan and turn the risen dough out onto the pan, flattening it out to the edges. If the dough springs back too much to cover the pan, allow it to rest for 10 minutes before resuming. Cover with a clean towel and let rise 45 minutes to an hour.
+# Preheat oven to 425 °F (220 °C). Remove towel and press indentations into the dough with your fingertips, then drizzle with the remaining 2 tablespoons of olive oil, sprinkle with sea salt and place pan in oven. Bake 20 to 25 minutes, or until the top is golden.
+# Remove the focaccia from the pan as soon as it is out of the oven and let cool on a rack before serving.
+
+==Notes==
+{{Reflist|group=note}}
+
+[[Category:Recipes for focaccia]]
+[[Category:Baking recipes]]
+[[Category:Italian recipes]]
+[[Category:Recipes with metric units]]
+[[Category:Recipes using all-purpose flour]]

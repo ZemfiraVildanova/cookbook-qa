@@ -238,3 +238,12 @@ def test_corpus_version_is_deterministic() -> None:
     assert ingest.corpus_version(a) == ingest.corpus_version(b)
     assert len(ingest.corpus_version(a)) == 12
     assert ingest.corpus_version(a) != ingest.corpus_version(a[:1])
+
+
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
+def test_ingredient_table_rows() -> None:
+    """SPEC 2.2: an ingredients section laid out as a wikitable yields one line per row."""
+    lines = ingest.ingredient_lines(fixture("focaccia_i"))
+    assert len(lines) >= 5
+    assert any(line.lower().startswith("active dry yeast") for line in lines)
+    assert all("{|" not in line and "|-" not in line and "!" not in line for line in lines)
