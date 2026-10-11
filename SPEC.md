@@ -389,8 +389,10 @@ Each rule: statement, then **V:** verification method (test file, eval case id, 
   markers. So "no more than 30 minutes" is a time constraint, never an exclusion.
   The candidate term is the first word after a marker once `INGREDIENT_STOPWORDS`
   are skipped; a candidate shorter than `INGREDIENT_MIN_CHARS` is ignored; it is
-  lower-cased and singularised (trailing `es`/`s` removed when the stem is at least
-  3 characters). If the singularised candidate is a key of
+  lower-cased and singularised by a fixed rule (`-ies` → `-y`; `-oes`, `-ches`,
+  `-shes`, `-xes`, `-sses` drop `-es`; otherwise a trailing `-s` is dropped unless the
+  word ends in `-ss`, `-us`, `-is` or `-ous`; words of 3 letters or fewer are kept).
+  If the singularised candidate is a key of
   `INGREDIENT_GROUPS` (section 8), it expands to that group's term list; otherwise
   its term list is the candidate alone. A candidate is accepted as a constraint
   **only if at least one term of its list matches at least one corpus ingredient

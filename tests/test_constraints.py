@@ -8,8 +8,6 @@ from recipe_qa import constraints
 from recipe_qa.corpus import Recipe
 from recipe_qa.schemas import AppliedConstraints, Diet
 
-pytestmark = pytest.mark.xfail(strict=True, reason="implemented in next commit")
-
 CORPUS_LINES = [
     "2 cups flour",
     "3 eggs",
@@ -148,6 +146,7 @@ def recipe(
     )
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_unknown_metadata_fails_filter() -> None:
     """R-11: unknown never satisfies a constraint."""
     assert not constraints.recipe_passes(recipe(minutes=None), ac(max_minutes=30))
@@ -156,12 +155,14 @@ def test_unknown_metadata_fails_filter() -> None:
     assert not constraints.recipe_passes(recipe(ingredients=[]), ac(exclude_ingredients=["egg"]))
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_max_minutes_boundary() -> None:
     """R-12: pass iff known and <= max_minutes."""
     assert constraints.recipe_passes(recipe(minutes=30), ac(max_minutes=30))
     assert not constraints.recipe_passes(recipe(minutes=31), ac(max_minutes=30))
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_diet_filter() -> None:
     """R-13: vegan requires vegan yes; vegetarian yes alone is not enough."""
     assert constraints.recipe_passes(
@@ -174,6 +175,7 @@ def test_diet_filter() -> None:
     assert not constraints.recipe_passes(recipe(vegetarian="no"), ac(diet=Diet.VEGETARIAN))
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_include_is_whole_word_with_plurals() -> None:
     """R-14: whole-word match with plural tolerance; groups expand."""
     assert constraints.recipe_passes(
@@ -193,6 +195,7 @@ def test_include_is_whole_word_with_plurals() -> None:
     )
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_exclude_is_substring_and_conservative() -> None:
     """R-15: substring match; 'nut' excludes nutmeg, walnuts and almonds."""
     assert not constraints.recipe_passes(
@@ -206,6 +209,7 @@ def test_exclude_is_substring_and_conservative() -> None:
     )
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_group_expansion_excludes_members() -> None:
     """E-32: 'without nuts' excludes a recipe listing almonds, with no word 'nut' anywhere."""
     almond_cake = recipe(ingredients=["200 g ground almonds", "4 eggs", "150 g sugar"])
@@ -213,6 +217,7 @@ def test_group_expansion_excludes_members() -> None:
     assert constraints.recipe_passes(almond_cake, ac(exclude_ingredients=["tomato"]))
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_dairy_group_respects_veto_exceptions() -> None:
     """R-15: VETO_EXCEPTIONS apply to the dairy group only."""
     assert constraints.recipe_passes(
@@ -227,6 +232,7 @@ def test_dairy_group_respects_veto_exceptions() -> None:
     )
 
 
+@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_apply_filters_keeps_order() -> None:
     """R-11: filters keep the retrieval order of the survivors."""
     fast = recipe("fast", minutes=10)
