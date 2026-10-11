@@ -33,3 +33,20 @@ queries:
   - { q: "banana cream pie", expect: [banana-cream-pie-i, banana-cream-pie-ii] }
   - { q: "Indian milk dessert with cheese dumplings", expect: [rasmalai-indian-cheese-and-milk-dessert] }
   - { q: "split pea soup", expect: [yellow-split-pea-soup] }
+  # Harder set (step 13): descriptions that share no token with the title, so BM25 must
+  # work through ingredients and method text and embeddings carry the dish identity.
+  - { q: "chickpea and tahini dip", expect: [hummus-i, hummus-greek] }
+  - { q: "Dutch thin waffle cookies with caramel syrup filling", expect: [stroopwafels] }
+  - { q: "Austrian chocolate cake with apricot jam", expect: [sachertorte] }
+  - { q: "eggs poached in spicy tomato and pepper sauce", expect: [shakshuka, shakshuka-i] }
+  - { q: "Chinese stir-fried noodles with vegetables", expect: [chow-mein] }
+  - { q: "Kerala coconut vegetable curry with curry leaves", expect: [keralan-vegetable-stew] }
+  - { q: "tart pink stalk dessert in pastry", expect: [rhubarb-pie] }
+  - { q: "soup from dried yellow legumes", expect: [yellow-split-pea-soup] }
+  - { q: "soup with ground beef, beans and taco seasoning", expect: [taco-soup] }
+  - { q: "custard pie with sliced bananas and whipped cream", expect: [banana-cream-pie-i, banana-cream-pie-ii] }
+  - { q: "fluffy breakfast flapjacks without eggs or dairy", expect: [pancakes-vegan] }
+  - { q: "rich white sauce with butter, cream and parmesan for fettuccine", expect: [alfredo-sauce] }
+  - { q: "Indian dessert of cheese dumplings in sweetened milk", expect: [rasmalai-indian-cheese-and-milk-dessert] }
+  - { q: "buttered noodles with broccoli and walnuts", expect: [garlic-parmesan-pasta] }
+  - { q: "Provençal summer vegetable stew with courgette and aubergine", expect: [ratatouille-i, ratatouille-ii] }
