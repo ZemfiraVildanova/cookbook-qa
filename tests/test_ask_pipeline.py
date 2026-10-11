@@ -70,7 +70,7 @@ def test_health_reports_corpus_version_without_external_calls() -> None:
 
 
 def test_safety_gate_refuses_before_model() -> None:
-    """R-30, R-31: safety refusal with ingredient lists, $0, citations = retrieved recipes."""
+    """R-30, R-31: safety refusal with ingredient lists, $0, citations = shown recipes."""
     llm = FakeLLM()
     client, _ = make_client(llm)
     status, body = ask(client, "Is the carbonara nut-free?")
@@ -83,7 +83,6 @@ def test_safety_gate_refuses_before_model() -> None:
     assert llm.calls == 0
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_safety_citations_are_shown_recipes_only() -> None:
     """R-36, E-33/E-34: the safety answer and citations cover the recipes named in the question."""
     client, _ = make_client(FakeLLM())

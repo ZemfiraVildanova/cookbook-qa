@@ -83,7 +83,6 @@ def test_safety_answer_never_asserts_absence() -> None:
         assert phrase not in body
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_safety_scope_keeps_titled_recipes() -> None:
     """R-36, E-33: only the retrieved recipes whose title shares a word with the question."""
     carbonara = make_recipe("spaghetti-alla-carbonara", "Spaghetti alla Carbonara")
@@ -100,7 +99,6 @@ def test_safety_scope_keeps_titled_recipes() -> None:
     assert safety.safety_scope("Is this nut-free? I need to know", retrieved) == retrieved
 
 
-@pytest.mark.xfail(strict=True, reason="implemented in next commit")
 def test_safety_scope_falls_back_to_all() -> None:
     """R-36, E-34: no shared title word means every retrieved recipe, in order; [] stays []."""
     recipes = [make_recipe("pesto-i", "Pesto I"), make_recipe("gazpacho", "Gazpacho")]

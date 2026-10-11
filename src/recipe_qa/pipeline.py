@@ -18,7 +18,7 @@ from recipe_qa.corpus import Corpus, Recipe
 from recipe_qa.llm import LLMClient, LLMError, LLMResult, LLMStatus, LLMUnavailableError
 from recipe_qa.prompting import build_request
 from recipe_qa.retrieval import Embedder, Index, RetrievalResult
-from recipe_qa.safety import check_safety, safety_answer
+from recipe_qa.safety import check_safety, safety_answer, safety_scope
 from recipe_qa.schemas import (
     AppliedConstraints,
     AskResponse,
@@ -147,7 +147,7 @@ class Pipeline:
         retrieved = retrieval.retrieved
 
         if trace.safety_pattern is not None:  # R-30, R-35: $0 exit, wins over out_of_corpus
-            return self._safety(retrieved, constraints, retrieval.mode, trace, llm=None)
+            return self._safety(question, retrieved, constraints, retrieval.mode, trace, llm=None)
         if not retrieved:  # R-19
             return self._refusal(
                 RefusalReason.OUT_OF_CORPUS, constraints, retrieval.mode, trace, None
@@ -180,7 +180,7 @@ class Pipeline:
                 cited_ids.append(rid)
 
         if output.status is LLMStatus.SAFETY:  # R-34
-            return self._safety(retrieved, constraints, retrieval.mode, trace, llm=result)
+            return self._safety(question, retrieved, constraints, retrieval.mode, trace, llm=result)
         if output.status is LLMStatus.OUT_OF_CORPUS:
             return self._refusal(
                 RefusalReason.OUT_OF_CORPUS, constraints, retrieval.mode, trace, result
@@ -220,15 +220,17 @@ class Pipeline:
 
     def _safety(
         self,
+        question: str,
         retrieved: list[Recipe],
         constraints: AppliedConstraints,
         mode: RetrievalMode,
         trace: _Trace,
         llm: LLMResult | None,
     ) -> AskResponse:
+        shown = safety_scope(question, retrieved)  # R-36
         return AskResponse(
-            answer=safety_answer(retrieved),
-            citations=_citations(retrieved),
+            answer=safety_answer(shown),
+            citations=_citations(shown),
             refused=True,
             refusal_reason=RefusalReason.SAFETY,
             applied_constraints=constraints,
