@@ -111,7 +111,7 @@ refusals, 9 probes). Prices from the vendor pages on the same day
 |---|---|---|---|
 | Answers that call the model, p50 / p95 | ≤ 3.0 s / ≤ 6.0 s | **2.20 s / 2.82 s** | met |
 | Pre-model refusals (safety, filtered out) | ≤ 500 ms | 202–258 ms (nine responses) | met |
-| Cold start, container start → `/health` 200 | ≤ 5 s | 1.94 s, local `docker run` of the step-15 image; CI logs the same measurement per build | met |
+| Cold start, container start → `/health` 200 | ≤ 5 s | 1.94 s in a local `docker run`; 2.05 s in the CI image job for `5768f64` (logged per build) | met |
 | Cost per 1,000 questions, golden mix | ≤ $1.00 | **$0.37** ($0.00037 per question) | met |
 | Correctness | 15/15 on 3 consecutive runs, 3/3 probes | 15/15, 0 flaky, 3/3 | met |
 
@@ -234,7 +234,7 @@ First commit 10:16, Europe/Moscow, 2026-10-11. Times are commit times from `git 
 | 12 CI gate, smoke, schedule | 14:48 | |
 | 13 OpenAI adapter, bake-off, retrieval numbers | 15:00 | three runs per model, 45-query retrieval set |
 | 14 README, ADRs | 15:00 | |
-| 15 final verification | 15:25 | fresh clone + image + golden 15/15, gitleaks clean, redeploy idempotent, two audits, static-route and prompt fixes |
+| 15 final verification | 15:19 | fresh clone + image + golden 15/15, gitleaks clean, redeploy idempotent, two audits, static-route and prompt fixes; final production run 15/15 on `5768f64` |
 
 ## Licence
 
