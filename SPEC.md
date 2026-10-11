@@ -767,10 +767,16 @@ measured value; it is never silently relaxed here.
   service, `updateMode: put`) is created or updated and run by CI through the Northflank
   API; no manual UI steps. Re-running the deploy for the same commit changes nothing (verified at step 15).
 - CI (`.github/workflows/ci.yml`): quality (ruff, mypy, pytest, gitleaks), frontend
-  (type check, build, API type drift), image build, eval gate (from step 12: the full
-  golden set runs against the freshly built container before the image is pushed),
-  deploy, wait for the expected `git_sha` in `/health`, three production smoke cases,
-  daily scheduled smoke.
+  (type check, build, API type drift), image build, eval gate (the full golden set runs
+  once against the freshly built container, started with the model keys, before the
+  image is pushed; the harness report and the container log are uploaded as the workflow
+  artifact `eval-report-<sha>`), deploy, wait for the expected `git_sha` in `/health`,
+  then `scripts/smoke.sh` against the public URL: `/health`, "How do I make carbonara?"
+  answered citing `spaghetti-alla-carbonara`, "What is the capital of France?" →
+  `out_of_domain`, "Is the carbonara nut-free?" → `safety` citing only the carbonara with
+  no model call. Each smoke case may be retried once. The same script runs daily at
+  06:17 UTC on a schedule (and on demand with the `smoke_only` dispatch input). Workflow
+  runs on `main` queue behind each other; the deploy job has its own serial group.
 - Rollback: re-run the deploy workflow with a previous image tag, or revert the commit.
 - Reviewer access: Northflank team invitation with a read-only role scoped to the
   project (services, logs, metrics; no secrets). Recorded in README.
@@ -891,3 +897,4 @@ ADRs and README use `--runs 3` against production.
 | v1.10 | 2026-10-11 | Alignment after the spec-auditor run following step 11: V: methods point at the tests that exist; rows for `TIME_PHRASE_MINUTES`, `EXCLUDE_SUFFIX`, `LLM_RETRY_BACKOFF_S`, `EMBED_BATCH`, `OPENAI_API_BASE`, `LOG_TOP_RANKED`; `TIME_PATTERNS` row matches the code; R-10 word and "free of" notes; R-62 no-key mode; R-63 model and dimension checks; RRF tie-break; 3.4 error mapping in full; R-70 level rule, 422 and attempts; 3.7 `required` and refusal card; R-31/R-55 empty ingredient lists; 12.1 file list; 12.3 measurement notes. |
 | v1.11 | 2026-10-11 | R-24 open questions are answered; `PROMPT_VERSION` answer.v3; G-03 becomes the open-question case (the third direct lookup, pad thai, is dropped to keep 15 cases); E-28/E-29 expected outcome. |
 | v1.12 | 2026-10-11 | `LLM_THINKING = disabled` sent to Anthropic (R-50): the model's default hidden thinking tripled output tokens and nearly doubled latency. |
+| v1.13 | 2026-10-11 | Section 11: eval gate details, artifact name, the three post-deploy smoke cases, daily schedule and `smoke_only` dispatch. |
