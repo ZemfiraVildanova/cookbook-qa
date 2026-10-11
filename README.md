@@ -216,7 +216,7 @@ model answered badly (prompt, SPEC 5.6). The fix path for each is in
 
 ## Time log
 
-First commit 10:16, Europe/Moscow, 2026-10-11. Times are commit times from `git log`.
+First commit 10:16, UTC+03:00, 2026-10-11. Times are commit times from `git log`.
 
 | Step | Done at | Notes |
 |---|---|---|
@@ -235,6 +235,7 @@ First commit 10:16, Europe/Moscow, 2026-10-11. Times are commit times from `git 
 | 13 OpenAI adapter, bake-off, retrieval numbers | 15:00 | three runs per model, 45-query retrieval set |
 | 14 README, ADRs | 15:00 | |
 | 15 final verification | 15:19 | fresh clone + image + golden 15/15, gitleaks clean, redeploy idempotent, two audits, static-route and prompt fixes; final production run 15/15 on `5768f64` |
+| docs fix (author request) | 16:25 | time zone written as UTC+03:00; commit count removed from the AI_NOTES step-15 row |
 
 ## Licence
 
