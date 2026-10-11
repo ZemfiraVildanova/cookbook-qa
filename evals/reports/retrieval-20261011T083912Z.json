@@ -1,0 +1,763 @@
+{
+ "generated_at": "20261011T083912Z",
+ "corpus_version": "40eeca491bc2",
+ "embedding_model": "text-embedding-3-small",
+ "embedding_tokens": 424,
+ "top_k": 4,
+ "results": {
+  "bm25": {
+   "hit@1": 1.0,
+   "hit@4": 1.0,
+   "mrr": 1.0,
+   "n": 30
+  },
+  "vectors": {
+   "hit@1": 1.0,
+   "hit@4": 1.0,
+   "mrr": 1.0,
+   "n": 30
+  },
+  "hybrid": {
+   "hit@1": 1.0,
+   "hit@4": 1.0,
+   "mrr": 1.0,
+   "n": 30
+  }
+ },
+ "per_query": [
+  {
+   "q": "How do I make carbonara?",
+   "expect": [
+    "spaghetti-alla-carbonara"
+   ],
+   "bm25_top": [
+    "spaghetti-alla-carbonara",
+    "soft-sugar-cookies",
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "macaroni-and-cheese-i"
+   ],
+   "vectors_top": [
+    "spaghetti-alla-carbonara",
+    "alfredo-sauce",
+    "basic-lasagna",
+    "garlic-parmesan-pasta"
+   ],
+   "hybrid_top": [
+    "spaghetti-alla-carbonara",
+    "macaroni-and-cheese-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "stracciatella-i"
+   ]
+  },
+  {
+   "q": "pasta with eggs, pecorino and cured pork, Roman style",
+   "expect": [
+    "spaghetti-alla-carbonara"
+   ],
+   "bm25_top": [
+    "spaghetti-alla-carbonara",
+    "pesto-i",
+    "taco-soup",
+    "pesto-ii"
+   ],
+   "vectors_top": [
+    "spaghetti-alla-carbonara",
+    "pesto-i",
+    "basic-lasagna",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ],
+   "hybrid_top": [
+    "spaghetti-alla-carbonara",
+    "pesto-i",
+    "basic-lasagna",
+    "pesto-ii"
+   ]
+  },
+  {
+   "q": "basil and pine nut sauce for pasta",
+   "expect": [
+    "pesto-i",
+    "pesto-ii"
+   ],
+   "bm25_top": [
+    "pesto-i",
+    "pesto-ii",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "garlic-parmesan-pasta"
+   ],
+   "vectors_top": [
+    "pesto-i",
+    "pesto-ii",
+    "garlic-parmesan-pasta",
+    "alfredo-sauce"
+   ],
+   "hybrid_top": [
+    "pesto-i",
+    "pesto-ii",
+    "garlic-parmesan-pasta",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ]
+  },
+  {
+   "q": "stir-fried rice noodles with tamarind and peanuts",
+   "expect": [
+    "pad-thai"
+   ],
+   "bm25_top": [
+    "pad-thai",
+    "chow-mein",
+    "alfredo-sauce",
+    "risotto-alla-milanese"
+   ],
+   "vectors_top": [
+    "pad-thai",
+    "chow-mein",
+    "tadka-dhal-spiced-lentil-curry-ii",
+    "keralan-vegetable-stew"
+   ],
+   "hybrid_top": [
+    "pad-thai",
+    "chow-mein",
+    "keralan-vegetable-stew",
+    "risotto-alla-milanese"
+   ]
+  },
+  {
+   "q": "saffron rice dish from Milan",
+   "expect": [
+    "risotto-alla-milanese"
+   ],
+   "bm25_top": [
+    "risotto-alla-milanese",
+    "risotto-basic",
+    "keralan-vegetable-stew",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i"
+   ],
+   "vectors_top": [
+    "risotto-alla-milanese",
+    "risotto-basic",
+    "pasta-and-bean-soup",
+    "dal-makhani-black-gram-with-cream"
+   ],
+   "hybrid_top": [
+    "risotto-alla-milanese",
+    "risotto-basic",
+    "dal-makhani-black-gram-with-cream",
+    "ratatouille-i"
+   ]
+  },
+  {
+   "q": "creamy Italian rice cooked slowly with broth",
+   "expect": [
+    "risotto-basic",
+    "risotto-alla-milanese"
+   ],
+   "bm25_top": [
+    "risotto-alla-milanese",
+    "risotto-basic",
+    "stracciatella-i",
+    "dal-makhani-black-gram-with-cream"
+   ],
+   "vectors_top": [
+    "risotto-basic",
+    "risotto-alla-milanese",
+    "pasta-and-bean-soup",
+    "stracciatella-i"
+   ],
+   "hybrid_top": [
+    "risotto-alla-milanese",
+    "risotto-basic",
+    "stracciatella-i",
+    "pasta-and-bean-soup"
+   ]
+  },
+  {
+   "q": "baked aubergine with tomato sauce and cheese",
+   "expect": [
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ],
+   "bm25_top": [
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "basic-lasagna",
+    "macaroni-and-cheese-baked",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ],
+   "vectors_top": [
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "ratatouille-i",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ],
+   "hybrid_top": [
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "basic-lasagna",
+    "macaroni-and-cheese-baked"
+   ]
+  },
+  {
+   "q": "flat Italian bread with olive oil",
+   "expect": [
+    "focaccia-i",
+    "focaccia-ii"
+   ],
+   "bm25_top": [
+    "focaccia-ii",
+    "focaccia-i",
+    "pesto-i",
+    "gazpacho"
+   ],
+   "vectors_top": [
+    "focaccia-i",
+    "focaccia-ii",
+    "pesto-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-i"
+   ],
+   "hybrid_top": [
+    "focaccia-ii",
+    "focaccia-i",
+    "pesto-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ]
+  },
+  {
+   "q": "Indian lentil dish with tempered spices",
+   "expect": [
+    "tadka-dhal-spiced-lentil-curry-i",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ],
+   "bm25_top": [
+    "tadka-dhal-spiced-lentil-curry-ii",
+    "tadka-dhal-spiced-lentil-curry-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i"
+   ],
+   "vectors_top": [
+    "tadka-dhal-spiced-lentil-curry-i",
+    "tadka-dhal-spiced-lentil-curry-ii",
+    "dal-makhani-black-gram-with-cream",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ],
+   "hybrid_top": [
+    "tadka-dhal-spiced-lentil-curry-ii",
+    "tadka-dhal-spiced-lentil-curry-i",
+    "dal-makhani-black-gram-with-cream",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ]
+  },
+  {
+   "q": "black lentils simmered with butter and cream",
+   "expect": [
+    "dal-makhani-black-gram-with-cream"
+   ],
+   "bm25_top": [
+    "dal-makhani-black-gram-with-cream",
+    "tadka-dhal-spiced-lentil-curry-i",
+    "banana-cream-pie-i",
+    "banana-cream-pie-ii"
+   ],
+   "vectors_top": [
+    "dal-makhani-black-gram-with-cream",
+    "tadka-dhal-spiced-lentil-curry-i",
+    "pasta-and-bean-soup",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ],
+   "hybrid_top": [
+    "dal-makhani-black-gram-with-cream",
+    "tadka-dhal-spiced-lentil-curry-i",
+    "pasta-and-bean-soup",
+    "risotto-basic"
+   ]
+  },
+  {
+   "q": "peas and paneer in tomato gravy",
+   "expect": [
+    "matar-paneer"
+   ],
+   "bm25_top": [
+    "matar-paneer",
+    "rasmalai-indian-cheese-and-milk-dessert",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "yellow-split-pea-soup"
+   ],
+   "vectors_top": [
+    "matar-paneer",
+    "dal-makhani-black-gram-with-cream",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ],
+   "hybrid_top": [
+    "matar-paneer",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "rasmalai-indian-cheese-and-milk-dessert",
+    "keralan-vegetable-stew"
+   ]
+  },
+  {
+   "q": "roasted eggplant mash from South India",
+   "expect": [
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ],
+   "bm25_top": [
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ],
+   "vectors_top": [
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "keralan-vegetable-stew"
+   ],
+   "hybrid_top": [
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ]
+  },
+  {
+   "q": "fresh tomato salsa",
+   "expect": [
+    "salsa-fresca",
+    "salsa-recipe"
+   ],
+   "bm25_top": [
+    "salsa-recipe",
+    "salsa-fresca",
+    "basic-lasagna",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ],
+   "vectors_top": [
+    "salsa-fresca",
+    "salsa-recipe",
+    "guacamole-i",
+    "gazpacho"
+   ],
+   "hybrid_top": [
+    "salsa-recipe",
+    "salsa-fresca",
+    "pasta-and-bean-soup",
+    "gazpacho"
+   ]
+  },
+  {
+   "q": "avocado dip",
+   "expect": [
+    "guacamole-i"
+   ],
+   "bm25_top": [
+    "guacamole-i",
+    "salsa-recipe",
+    "banana-cream-pie-i",
+    "hummus-greek"
+   ],
+   "vectors_top": [
+    "guacamole-i",
+    "hummus-greek",
+    "salsa-fresca",
+    "salsa-recipe"
+   ],
+   "hybrid_top": [
+    "guacamole-i",
+    "salsa-recipe",
+    "hummus-greek",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ]
+  },
+  {
+   "q": "Italian egg drop soup",
+   "expect": [
+    "stracciatella-i"
+   ],
+   "bm25_top": [
+    "stracciatella-i",
+    "pasta-and-bean-soup",
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "pesto-ii"
+   ],
+   "vectors_top": [
+    "stracciatella-i",
+    "pasta-and-bean-soup",
+    "vegetable-soup",
+    "yellow-split-pea-soup"
+   ],
+   "hybrid_top": [
+    "stracciatella-i",
+    "pasta-and-bean-soup",
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "vegetable-soup"
+   ]
+  },
+  {
+   "q": "pasta e fagioli",
+   "expect": [
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "pasta-and-bean-soup"
+   ],
+   "bm25_top": [
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "pasta-and-bean-soup",
+    "pad-thai",
+    "garlic-parmesan-pasta"
+   ],
+   "vectors_top": [
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "pasta-and-bean-soup",
+    "garlic-parmesan-pasta",
+    "alfredo-sauce"
+   ],
+   "hybrid_top": [
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "pasta-and-bean-soup",
+    "garlic-parmesan-pasta",
+    "alfredo-sauce"
+   ]
+  },
+  {
+   "q": "cold Spanish tomato soup",
+   "expect": [
+    "gazpacho"
+   ],
+   "bm25_top": [
+    "gazpacho",
+    "yellow-split-pea-soup",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii",
+    "pasta-and-bean-soup"
+   ],
+   "vectors_top": [
+    "gazpacho",
+    "taco-soup",
+    "pasta-and-bean-soup",
+    "salsa-recipe"
+   ],
+   "hybrid_top": [
+    "gazpacho",
+    "taco-soup",
+    "pasta-and-bean-soup",
+    "yellow-split-pea-soup"
+   ]
+  },
+  {
+   "q": "Nigerian vegetable soup with pumpkin leaves",
+   "expect": [
+    "edikang-ikong"
+   ],
+   "bm25_top": [
+    "edikang-ikong",
+    "vegetable-soup",
+    "taco-soup",
+    "gazpacho"
+   ],
+   "vectors_top": [
+    "edikang-ikong",
+    "vegetable-soup",
+    "pasta-and-bean-soup",
+    "pasta-and-bean-soup-pasta-e-fagioli"
+   ],
+   "hybrid_top": [
+    "edikang-ikong",
+    "vegetable-soup",
+    "taco-soup",
+    "keralan-vegetable-stew"
+   ]
+  },
+  {
+   "q": "Mexican sponge cake soaked in three milks",
+   "expect": [
+    "tres-leches-cake-i",
+    "tres-leches-cake-ii"
+   ],
+   "bm25_top": [
+    "tres-leches-cake-i",
+    "tres-leches-cake-ii",
+    "sachertorte",
+    "dal-makhani-black-gram-with-cream"
+   ],
+   "vectors_top": [
+    "tres-leches-cake-ii",
+    "tres-leches-cake-i",
+    "rasmalai-indian-cheese-and-milk-dessert",
+    "sachertorte"
+   ],
+   "hybrid_top": [
+    "tres-leches-cake-i",
+    "tres-leches-cake-ii",
+    "sachertorte",
+    "dal-makhani-black-gram-with-cream"
+   ]
+  },
+  {
+   "q": "cinnamon sugar cookies",
+   "expect": [
+    "snickerdoodles-i",
+    "snickerdoodles-iv"
+   ],
+   "bm25_top": [
+    "snickerdoodles-iv",
+    "snickerdoodles-i",
+    "stroopwafels",
+    "soft-sugar-cookies"
+   ],
+   "vectors_top": [
+    "snickerdoodles-iv",
+    "snickerdoodles-i",
+    "soft-sugar-cookies",
+    "stroopwafels"
+   ],
+   "hybrid_top": [
+    "snickerdoodles-iv",
+    "snickerdoodles-i",
+    "stroopwafels",
+    "soft-sugar-cookies"
+   ]
+  },
+  {
+   "q": "Austrian chocolate cake with apricot jam",
+   "expect": [
+    "sachertorte"
+   ],
+   "bm25_top": [
+    "sachertorte",
+    "tres-leches-cake-ii",
+    "tres-leches-cake-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ],
+   "vectors_top": [
+    "sachertorte",
+    "tres-leches-cake-i",
+    "banana-cream-pie-i",
+    "banana-cream-pie-ii"
+   ],
+   "hybrid_top": [
+    "sachertorte",
+    "tres-leches-cake-i",
+    "tres-leches-cake-ii",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ]
+  },
+  {
+   "q": "Dutch caramel waffle cookies",
+   "expect": [
+    "stroopwafels"
+   ],
+   "bm25_top": [
+    "stroopwafels",
+    "soft-sugar-cookies",
+    "yellow-split-pea-soup",
+    "snickerdoodles-i"
+   ],
+   "vectors_top": [
+    "stroopwafels",
+    "soft-sugar-cookies",
+    "snickerdoodles-iv",
+    "snickerdoodles-i"
+   ],
+   "hybrid_top": [
+    "stroopwafels",
+    "soft-sugar-cookies",
+    "snickerdoodles-i",
+    "snickerdoodles-iv"
+   ]
+  },
+  {
+   "q": "chickpea dip with tahini",
+   "expect": [
+    "hummus-i",
+    "hummus-greek"
+   ],
+   "bm25_top": [
+    "hummus-greek",
+    "hummus-i",
+    "salsa-recipe",
+    "banana-cream-pie-i"
+   ],
+   "vectors_top": [
+    "hummus-greek",
+    "hummus-i",
+    "tadka-dhal-spiced-lentil-curry-ii",
+    "dal-makhani-black-gram-with-cream"
+   ],
+   "hybrid_top": [
+    "hummus-greek",
+    "hummus-i",
+    "dal-makhani-black-gram-with-cream",
+    "salsa-recipe"
+   ]
+  },
+  {
+   "q": "eggs poached in spicy tomato sauce",
+   "expect": [
+    "shakshuka",
+    "shakshuka-i"
+   ],
+   "bm25_top": [
+    "shakshuka",
+    "basic-lasagna",
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ],
+   "vectors_top": [
+    "shakshuka",
+    "shakshuka-i",
+    "stracciatella-i",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ],
+   "hybrid_top": [
+    "shakshuka",
+    "shakshuka-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-i",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ]
+  },
+  {
+   "q": "Provençal vegetable stew with zucchini and eggplant",
+   "expect": [
+    "ratatouille-i",
+    "ratatouille-ii"
+   ],
+   "bm25_top": [
+    "ratatouille-ii",
+    "ratatouille-i",
+    "keralan-vegetable-stew",
+    "pasta-and-bean-soup-pasta-e-fagioli"
+   ],
+   "vectors_top": [
+    "ratatouille-i",
+    "ratatouille-ii",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii",
+    "keralan-vegetable-stew"
+   ],
+   "hybrid_top": [
+    "ratatouille-ii",
+    "ratatouille-i",
+    "keralan-vegetable-stew",
+    "eggplant-parmesan-melanzane-alla-parmigiana-ii"
+   ]
+  },
+  {
+   "q": "Kerala coconut vegetable stew",
+   "expect": [
+    "keralan-vegetable-stew"
+   ],
+   "bm25_top": [
+    "keralan-vegetable-stew",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "chicken-curry",
+    "pasta-and-bean-soup-pasta-e-fagioli"
+   ],
+   "vectors_top": [
+    "keralan-vegetable-stew",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ],
+   "hybrid_top": [
+    "keralan-vegetable-stew",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i",
+    "chicken-curry",
+    "baingan-bartha-south-indian-eggplant-with-chili-ii"
+   ]
+  },
+  {
+   "q": "vegan mac and cheese",
+   "expect": [
+    "macaroni-and-cheese-vegan"
+   ],
+   "bm25_top": [
+    "macaroni-and-cheese-vegan",
+    "macaroni-and-cheese-i",
+    "macaroni-and-cheese-baked",
+    "stracciatella-i"
+   ],
+   "vectors_top": [
+    "macaroni-and-cheese-vegan",
+    "macaroni-and-cheese-baked",
+    "macaroni-and-cheese-i",
+    "pancakes-vegan"
+   ],
+   "hybrid_top": [
+    "macaroni-and-cheese-vegan",
+    "macaroni-and-cheese-i",
+    "macaroni-and-cheese-baked",
+    "pancakes-vegan"
+   ]
+  },
+  {
+   "q": "banana cream pie",
+   "expect": [
+    "banana-cream-pie-i",
+    "banana-cream-pie-ii"
+   ],
+   "bm25_top": [
+    "banana-cream-pie-i",
+    "banana-cream-pie-ii",
+    "rhubarb-pie",
+    "dal-makhani-black-gram-with-cream"
+   ],
+   "vectors_top": [
+    "banana-cream-pie-i",
+    "banana-cream-pie-ii",
+    "rhubarb-pie",
+    "tres-leches-cake-i"
+   ],
+   "hybrid_top": [
+    "banana-cream-pie-i",
+    "banana-cream-pie-ii",
+    "rhubarb-pie",
+    "tres-leches-cake-i"
+   ]
+  },
+  {
+   "q": "Indian milk dessert with cheese dumplings",
+   "expect": [
+    "rasmalai-indian-cheese-and-milk-dessert"
+   ],
+   "bm25_top": [
+    "rasmalai-indian-cheese-and-milk-dessert",
+    "tres-leches-cake-ii",
+    "keralan-vegetable-stew",
+    "macaroni-and-cheese-baked"
+   ],
+   "vectors_top": [
+    "rasmalai-indian-cheese-and-milk-dessert",
+    "dal-makhani-black-gram-with-cream",
+    "matar-paneer",
+    "tadka-dhal-spiced-lentil-curry-ii"
+   ],
+   "hybrid_top": [
+    "rasmalai-indian-cheese-and-milk-dessert",
+    "tres-leches-cake-ii",
+    "keralan-vegetable-stew",
+    "baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i"
+   ]
+  },
+  {
+   "q": "split pea soup",
+   "expect": [
+    "yellow-split-pea-soup"
+   ],
+   "bm25_top": [
+    "yellow-split-pea-soup",
+    "vegetable-soup",
+    "taco-soup",
+    "pasta-and-bean-soup-pasta-e-fagioli"
+   ],
+   "vectors_top": [
+    "yellow-split-pea-soup",
+    "pasta-and-bean-soup",
+    "pasta-and-bean-soup-pasta-e-fagioli",
+    "vegetable-soup"
+   ],
+   "hybrid_top": [
+    "yellow-split-pea-soup",
+    "vegetable-soup",
+    "pasta-and-bean-soup",
+    "pasta-and-bean-soup-pasta-e-fagioli"
+   ]
+  }
+ ]
+}

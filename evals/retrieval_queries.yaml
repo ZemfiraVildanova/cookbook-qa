@@ -1,0 +1,35 @@
+# Retrieval-quality queries for evals/retrieval_eval.py (SPEC 12.2, ADR-001).
+# `expect` lists the recipe ids that count as a hit (any of them). Half are dish names,
+# half are paraphrases that share few tokens with the title, so lexical and semantic
+# retrieval are both exercised.
+queries:
+  - { q: "How do I make carbonara?", expect: [spaghetti-alla-carbonara] }
+  - { q: "pasta with eggs, pecorino and cured pork, Roman style", expect: [spaghetti-alla-carbonara] }
+  - { q: "basil and pine nut sauce for pasta", expect: [pesto-i, pesto-ii] }
+  - { q: "stir-fried rice noodles with tamarind and peanuts", expect: [pad-thai] }
+  - { q: "saffron rice dish from Milan", expect: [risotto-alla-milanese] }
+  - { q: "creamy Italian rice cooked slowly with broth", expect: [risotto-basic, risotto-alla-milanese] }
+  - { q: "baked aubergine with tomato sauce and cheese", expect: [eggplant-parmesan-melanzane-alla-parmigiana-i, eggplant-parmesan-melanzane-alla-parmigiana-ii] }
+  - { q: "flat Italian bread with olive oil", expect: [focaccia-i, focaccia-ii] }
+  - { q: "Indian lentil dish with tempered spices", expect: [tadka-dhal-spiced-lentil-curry-i, tadka-dhal-spiced-lentil-curry-ii] }
+  - { q: "black lentils simmered with butter and cream", expect: [dal-makhani-black-gram-with-cream] }
+  - { q: "peas and paneer in tomato gravy", expect: [matar-paneer] }
+  - { q: "roasted eggplant mash from South India", expect: [baingan-bartha-south-indian-eggplant-with-coconut-and-chili-i, baingan-bartha-south-indian-eggplant-with-chili-ii] }
+  - { q: "fresh tomato salsa", expect: [salsa-fresca, salsa-recipe] }
+  - { q: "avocado dip", expect: [guacamole-i] }
+  - { q: "Italian egg drop soup", expect: [stracciatella-i] }
+  - { q: "pasta e fagioli", expect: [pasta-and-bean-soup-pasta-e-fagioli, pasta-and-bean-soup] }
+  - { q: "cold Spanish tomato soup", expect: [gazpacho] }
+  - { q: "Nigerian vegetable soup with pumpkin leaves", expect: [edikang-ikong] }
+  - { q: "Mexican sponge cake soaked in three milks", expect: [tres-leches-cake-i, tres-leches-cake-ii] }
+  - { q: "cinnamon sugar cookies", expect: [snickerdoodles-i, snickerdoodles-iv] }
+  - { q: "Austrian chocolate cake with apricot jam", expect: [sachertorte] }
+  - { q: "Dutch caramel waffle cookies", expect: [stroopwafels] }
+  - { q: "chickpea dip with tahini", expect: [hummus-i, hummus-greek] }
+  - { q: "eggs poached in spicy tomato sauce", expect: [shakshuka, shakshuka-i] }
+  - { q: "Provençal vegetable stew with zucchini and eggplant", expect: [ratatouille-i, ratatouille-ii] }
+  - { q: "Kerala coconut vegetable stew", expect: [keralan-vegetable-stew] }
+  - { q: "vegan mac and cheese", expect: [macaroni-and-cheese-vegan] }
+  - { q: "banana cream pie", expect: [banana-cream-pie-i, banana-cream-pie-ii] }
+  - { q: "Indian milk dessert with cheese dumplings", expect: [rasmalai-indian-cheese-and-milk-dessert] }
+  - { q: "split pea soup", expect: [yellow-split-pea-soup] }
